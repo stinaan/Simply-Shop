@@ -1,8 +1,71 @@
+// import code dependencies
 import React from 'react';
+import { 
+  BrowserRouter as Router, 
+  Route, 
+  Switch,
+  NavLink
+} from 'react-router-dom';
+
+// import assets
 import logo from './logo.svg';
+
+// import styling
 import './App.css';
 
+// import additional pages & components
+import Stylepage from './pages/stylepage'
+
+/**
+ * Represents the base of all pages in the application.
+ */
 function App() {
+  return (
+    <Router>
+      <div>
+        <Navcomp/>
+        <Switch>
+          <Route path="/" component={Homepage} exact/>
+          <Route path="/stylepage" component={Stylepage}/>
+          <Route path="/react-default" component={DefaultReactpage}/>
+          <Route component={Errorpage}/>
+        </Switch>
+      </div>
+    </Router>
+  );
+}
+
+/**
+ * Represents a navigation component to other pages on the website.
+ */
+const Navcomp = () => {
+  return (
+    <div>
+      <NavLink to="/">Home</NavLink>
+      <NavLink to="/stylepage">Stylepage</NavLink>
+      <NavLink to="/react-default">React Default Page</NavLink>
+      <NavLink to="/garbage">Error Page</NavLink>
+    </div>
+  );
+}
+
+/**
+ * Represents the home page of the website.
+ */
+const Homepage = () => {
+  return (
+    <div>
+      <h1>Simply Shop</h1>
+      <p>This is the home page!</p>
+    </div>
+  );
+}
+
+/**
+ * Represents a webpage with just the content of the default React
+ * page template.
+ */
+const DefaultReactpage = () => {
   return (
     <div className="App">
       <header className="App-header">
@@ -15,11 +78,22 @@ function App() {
           className="App-link"
           href="https://reactjs.org"
           target="_blank"
-          rel="noopener noreferrer"
-        >
+          rel="noopener noreferrer">
           Learn React
         </a>
       </header>
+    </div>
+  );
+}
+
+/**
+ * Represents an error page when a page could not be found.
+ */
+const Errorpage = () => {
+  return (
+    <div>
+      <h1>Error!</h1>
+      <p>Sorry, that page doesn't exist!</p>
     </div>
   );
 }
