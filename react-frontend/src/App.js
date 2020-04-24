@@ -40,12 +40,14 @@ function App() {
  */
 const Navcomp = () => {
   return (
-    <div>
-      <NavLink to="/">Home</NavLink>
-      <NavLink to="/stylepage">Stylepage</NavLink>
-      <NavLink to="/react-default">React Default Page</NavLink>
-      <NavLink to="/garbage">Error Page</NavLink>
-    </div>
+    <nav>
+      <ul>
+        <li><NavLink to="/">Home</NavLink></li>
+        <li><NavLink to="/stylepage">Stylepage</NavLink></li>
+        <li><NavLink to="/react-default">React Default Page</NavLink></li>
+        <li><NavLink to="/garbage">Error Page</NavLink></li>
+      </ul>
+    </nav>
   );
 }
 
