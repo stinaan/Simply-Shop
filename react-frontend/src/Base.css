@@ -1,0 +1,95 @@
+:root {
+    --f-hi: #1d262c;
+    --f-md: #218d76;
+    --f-lo: #55a799;
+    --f-in: #ffffff;
+
+    --b-hi: #eefbf8;
+    --b-md: #bfeee6;
+    --b-lo: #80eed6;
+    --b-in: #092e31;
+
+    --xxs: 3px;
+    --xs: 6px;
+    --sm: 12px;
+    --md: 18px;
+    --lg: 24px;
+    --xl: 36px;
+    --xxl: 48px;
+
+    --header-height: 120px;
+    --minimum-side-width: 24px;
+    --main-width: 960px;
+    --footer-height: 120px;
+}
+
+body {
+    color: var(--f-hi);
+    background-color: var(--b-hi);
+}
+
+a {
+    color: var(--f-md);
+}
+
+blockquote {
+    color: var(--f-lo);
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+pre code {
+    background-color: var(--b-in);
+}
+
+code {
+    border-radius: var(--xxs);
+    padding: 1pt 4pt;
+    background-color: var(--b-in);
+    color: var(--f-in);
+}
+
+header, footer {
+    background-color: var(--b-md);
+}
+
+/* setting up the base page layout with a css grid */
+pagegrid {
+    display: grid;
+    grid: "header header header" var(--header-height) 
+          "left main right" 1fr 
+          "footer footer footer" var(--footer-height)
+        / minmax(var(--minimum-side-width), 1fr) minmax(0px, var(--main-width)) minmax(var(--minimum-side-width), 1fr);
+    height: 100vh;
+}
+header { grid-area: header; }
+main { grid-area: main; }
+footer { grid-area: footer; }
+header, footer { padding: var(--minimum-side-width); }
+
+
+header {
+    display: flex;
+    align-items: center;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+}
+
+header nav ul li {
+    text-decoration: none;
+}
+
+header nav ul li:not(:last-child) {
+    margin-right: var(--md);
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

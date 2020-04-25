@@ -16,7 +16,8 @@ import {
 import logo from './logo.svg';
 
 // import styling
-import './App.css';
+import './normalize.css';
+import './Base.css';
 
 // import additional pages & components
 import Homepage from './pages/homepage'
@@ -27,19 +28,26 @@ import Navcomp from './comps/navigation'
 
 const Basepage = () => {
     return (
-        <div id="base">
         <Router>
-          <div>
-            <Navcomp/>
-            <Switch>
-              <Route path="/" component={Homepage} exact/>
-              <Route path="/stylepage" component={Stylepage}/>
-              <Route path="/react-default" component={DefaultReactpage}/>
-              <Route component={Errorpage}/>
-            </Switch>
-          </div>
-        </Router>
+        <div id="base">
+            <pagegrid>
+                <header>
+                    <Navcomp/>
+                </header>
+                <main>
+                    <Switch>
+                    <Route path="/" component={Homepage} exact/>
+                    <Route path="/stylepage" component={Stylepage}/>
+                    <Route path="/react-default" component={DefaultReactpage}/>
+                    <Route component={Errorpage}/>
+                    </Switch>
+                </main>
+                <footer>
+                    <p>This is the footer.</p>
+                </footer>
+            </pagegrid>
         </div>
+        </Router>
     );
 }
 

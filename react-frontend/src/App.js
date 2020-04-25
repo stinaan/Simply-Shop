@@ -2,6 +2,8 @@
 import React from 'react';
 import Basepage from './Base'
 
+import './App.css';
+
 /**
  * Represents the base of all pages in the application.
  */
