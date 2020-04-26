@@ -27,23 +27,23 @@ public class ItemController {
  // @Autowired
   //private FileArchiveService fileArchiveService;
   //adds user to repo
-  @RequestMapping(value = "/items", method = RequestMethod.POST)
-  public @ResponseBody Item createUser(
+  @PostMapping(value = "/items") 
+  public @ResponseBody Item createItem(
 		  				 @RequestParam(value="name", required=true) String name,
                          @RequestParam(value="category", required=true) String category,
-                         @RequestParam(value="price", required=true) String price,
-                         @RequestParam(value="quantity", required=true) String quantity,
+                         @RequestParam(value="price", required=true) double price,
+                         @RequestParam(value="quantity", required=true) int quantity,
                          @RequestParam(value="description", required=true) String description,
-                         @RequestParam(value="id", required=true) String id) throws Exception {
+                         @RequestParam(value="id", required=true) Integer itemID) throws Exception {
    // ItemImage itemImage = fileArchiveService.saveFileToS3(image); 
-	  Item item = new Item(name,  category,  price,  quantity,  description,  id);
+	Item item = new Item(name,  category,  price,  quantity,  description,  itemID);
     itemRepo.save(item);
     return item; 
   }
     
     //finds the user in repo
-    @RequestMapping(value = "/items/{itemID}", method = RequestMethod.GET)
-    public Item getCustomer(@PathVariable("itemID") int itemID) {
+    @GetMapping(value = "/items/{itemID}")
+    public Item getItem(@PathVariable("itemID") int itemID) {
       
       /* validate customer Id parameter */
     	Item item = itemRepo.findById(itemID).get();
@@ -52,15 +52,15 @@ public class ItemController {
   }
     
     //finds all items in repo
-    @RequestMapping(value = "/items", method = RequestMethod.GET)
+    @GetMapping(value = "/items")
     public List<Item> getItems() {
       
       return (List<Item>) itemRepo.findAll();
     }
     
     //deletes a user in repo
-    @RequestMapping(value = "/items/{itemID}", method = RequestMethod.DELETE)
-    public void removeCustomer(@PathVariable("itemID") int itemID, HttpServletResponse httpResponse) {
+    @DeleteMapping(value = "/items/{itemID}")
+    public void removeItem(@PathVariable("itemID") int itemID, HttpServletResponse httpResponse) {
       
       if(itemRepo.existsById(itemID)){
     	  Item item = itemRepo.findById(itemID).get();

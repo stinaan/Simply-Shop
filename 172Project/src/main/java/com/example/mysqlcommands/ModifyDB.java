@@ -10,19 +10,20 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.example.demo.model.Item;
-import com.mysql.cj.xdevapi.Statement;
+//import com.mysql.cj.xdevapi.Statement;
 
 /**
  * Modify the database
  * @author Richard Pham
- *
+ *Edited by Christina Nguyen
+ *	took out Integer.parse bc quantity is now an int
  */
 public class ModifyDB {
 
 	//MySQL credentials, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
-	private String dburl = new String("jdbc:mysql://cmpe172database.c2yryz8m0mvy.us-east-1.rds.amazonaws.com:3306/userdb");
+	private String dburl = new String("jdbc:mysql://localhost:3306/userdb");
 	private String dbuname = new String("root");
-	private String dbpassword = new String("thomas172");
+	private String dbpassword = new String("password");
 	private String dbdriver = new String("com.mysql.jdbc.Driver");
 
 	//Load driver from MySQL database, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
@@ -281,8 +282,8 @@ public class ModifyDB {
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, item.getName());
 			ps.setString(2, item.getCategory());
-			ps.setString(3, item.getPrice());
-			ps.setString(4, item.getQuantity());
+			ps.setDouble(3, item.getPrice()); //
+			ps.setInt(4, item.getQuantity()); //
 			ps.setString(5, item.getDescription());
 			ps.executeUpdate();
 
@@ -304,9 +305,9 @@ public class ModifyDB {
 		}
 
 		try {
-			q = Integer.parseInt(item.getQuantity());
-			if (q <= 0 || item.getQuantity().contains("-")
-					|| (item.getQuantity().charAt(0) == '0' && item.getCategory().length() == 1)) {
+			q = (item.getQuantity());
+			if (q <= 0 //|| item.getQuantity().contains("-") --do we need this still?
+					|| (item.getQuantity() == 0 && item.getCategory().length() == 1)) {
 				System.out.println("There is no more " + item.getName() + " in stock!");
 				return;
 			}
@@ -325,7 +326,7 @@ public class ModifyDB {
 			PreparedStatement ps = con.prepareStatement(sql);
 			q--;
 			ps.setInt(1, q);
-			ps.setInt(2, Integer.parseInt(item.getId()));
+			ps.setInt(2, (item.getId()));
 			ps.executeUpdate();
 
 			System.out.println("Success");
@@ -347,7 +348,7 @@ public class ModifyDB {
 		}
 
 		try {
-			q = Integer.parseInt(item.getQuantity());
+			q = (item.getQuantity());
 		} catch (Exception e) {
 			System.out.println("Unable to get quantity of item");
 			return;
@@ -363,7 +364,7 @@ public class ModifyDB {
 			PreparedStatement ps = con.prepareStatement(sql);
 			q++;
 			ps.setInt(1, q);
-			ps.setInt(2, Integer.parseInt(item.getId()));
+			ps.setInt(2, (item.getId()));
 			ps.executeUpdate();
 
 			System.out.println("Success");

@@ -27,7 +27,7 @@ public class UserController {
  // @Autowired
   //private FileArchiveService fileArchiveService;
   //adds user to repo
-  @RequestMapping(value = "/users", method = RequestMethod.POST)
+  @PostMapping(value = "/users")
   public @ResponseBody User createUser(@RequestParam(value="firstName", required=true) String firstName,
                          @RequestParam(value="lastName", required=true) String lastName,
                          @RequestParam(value="username", required=true) String username,
@@ -39,9 +39,10 @@ public class UserController {
   }
     
     //finds the user in repo
-    @RequestMapping(value = "/users/{userID}", method = RequestMethod.GET)
+    @GetMapping(value = "/users/{userID}")
     public User getCustomer(@PathVariable("userID") int userID) {
       
+
       /* validate customer Id parameter */
       User customer = userRepo.findById(userID).get();
       return customer;
@@ -49,14 +50,14 @@ public class UserController {
   }
     
     //finds all users in repo
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public List<User> getCustomers() {
-      
+    @GetMapping(value = "/users")
+    public List<User> getUsers() {
+     
       return (List<User>) userRepo.findAll();
     }
     
     //deletes a user in repo
-    @RequestMapping(value = "/users/{userID}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/users/{userID}")
     public void removeCustomer(@PathVariable("userID") int userID, HttpServletResponse httpResponse) {
       
       if(userRepo.existsById(userID)){
