@@ -225,7 +225,6 @@ public class ModifyDB {
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
 		String sql = "UPDATE item SET theName = ?, "+
 		"category = ?, price = ?, quantity = ?, "+
 		"theDescription = ? WHERE id = ?";
@@ -254,7 +253,6 @@ public class ModifyDB {
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
 		String sql = "DELETE FROM item " + "WHERE id = ?";
 
 		try {
@@ -275,7 +273,7 @@ public class ModifyDB {
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
+		String result = "Item inserted";
 		String sql = "insert into userdb.item(theName, category, price, quantity, theDescription) values (?,?,?,?,?)";
 
 		try {
@@ -319,7 +317,6 @@ public class ModifyDB {
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
 		String sql = "UPDATE item " + "SET quantity = ? " + "WHERE id = ?";
 
 		try {
@@ -357,7 +354,6 @@ public class ModifyDB {
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
 		String sql = "UPDATE item " + "SET quantity = ? " + "WHERE id = ?";
 
 		try {
