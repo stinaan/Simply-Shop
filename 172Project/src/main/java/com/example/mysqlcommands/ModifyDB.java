@@ -50,7 +50,7 @@ public class ModifyDB {
 	}
 
 	
-	//Create table for items
+	//Create table for items, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void createTable() throws SQLException {
 
 		loadDriver(dbdriver);
@@ -73,7 +73,7 @@ public class ModifyDB {
 	}
 
 	
-	//View table for items
+	//View table for items, got help from https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html and https://www.youtube.com/watch?v=_oEOH23OYYQ at 13:02
 	public void viewTable(HttpServletResponse response) throws SQLException {
 
 		loadDriver(dbdriver);
@@ -112,7 +112,7 @@ public class ModifyDB {
 		}
 	}
 
-	//View table for items
+	//View table for items, got help from https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html
 	public void viewTable() throws SQLException {
 
 		loadDriver(dbdriver);
@@ -147,7 +147,7 @@ public class ModifyDB {
 		}
 	}
 
-	// View table by name
+	// View table by name, got help from https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html
 	public void viewTableByName(String name) throws SQLException {
 
 		loadDriver(dbdriver);
@@ -183,7 +183,7 @@ public class ModifyDB {
 		}
 	}
 
-	// View table by category
+	// View table by category, got help from https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html
 	public void viewTableByCategory(String theCategory) throws SQLException {
 
 		loadDriver(dbdriver);
@@ -219,7 +219,7 @@ public class ModifyDB {
 		}
 	}
 
-	// Edit item
+	// Edit item, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void editItem( String name, String category, String price, String quantity, String description, int id) {
 
 		loadDriver(dbdriver);
@@ -248,7 +248,7 @@ public class ModifyDB {
 
 	}
 
-	// View table by name
+	// Delete entry from table, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void deleteEntry(int id) throws SQLException {
 
 		loadDriver(dbdriver);
@@ -270,7 +270,7 @@ public class ModifyDB {
 		}
 	}
 
-	// Insert an item to database
+	// Insert an item to database, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public String insert(Item item) {
 		loadDriver(dbdriver);
 
@@ -295,7 +295,7 @@ public class ModifyDB {
 
 	}
 
-	// Reduce quantity of item
+	// Reduce quantity of item, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void reduceQuantity(Item item) {
 
 		int q = 0;
@@ -338,7 +338,7 @@ public class ModifyDB {
 
 	}
 
-	// Increase quantity of item
+	// Increase quantity of item, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void increaseQuantity(Item item) {
 
 		int q = 0;
