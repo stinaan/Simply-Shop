@@ -1,18 +1,52 @@
 package com.example.demo.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.Min;
 
+import org.hibernate.validator.constraints.Length;
+@Entity(name="item")
 public class Item {
+	//private String name, category, price, quantity, description, id;
 	
-	private String name, category, price, quantity, description, id;
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Integer itemID;
+	
+	@Column(name = "name", nullable = false, unique = true)
+    @Length(min = 3, message = "*Name must have at least 3 characters")
+    private String name;
 
-	public Item(String name, String category, String price, String quantity, String description, String id) {
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "quantity", nullable = false)
+    @Min(value = 0, message = "*Quantity can not be less than 0")
+    private Integer quantity;
+
+    @Column(name = "price", nullable = false)
+    @Min(value = 0, message = "*Price can not be less than 0")
+    private Double price;
+    
+    @Column(name = "category", nullable = false)
+    private String category;
+	
+	@Column(name = "Image", length = Integer.MAX_VALUE, nullable = true)
+	private byte[] image; //added variable for item image -Christina
+	
+
+	public Item(String name, String category, Double price, Integer quantity, String description, Integer id) {
 		super();
 		this.name = name;
 		this.category = category;
 		this.price = price;
 		this.quantity = quantity;
 		this.description = description;
-		this.id = id;
+		this.itemID = id;
 	}
 
 	public String getName() {
@@ -31,19 +65,19 @@ public class Item {
 		this.category = category;
 	}
 
-	public String getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
-	public String getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(String quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
@@ -55,17 +89,26 @@ public class Item {
 		this.description = description;
 	}
 
-	public String getId() {
-		return id;
+	public Integer getId() {
+		return this.itemID;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setId(Integer id) {
+		this.itemID = id;
 	}
 
 	public Item() {
 		super();
 	}
+	
+	//added this for image for item -Christina
+    public byte[] getImage() {
+        return image;
+    }
+ 
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 	
 
 }

@@ -10,19 +10,20 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.example.demo.model.Item;
-import com.mysql.cj.xdevapi.Statement;
+//import com.mysql.cj.xdevapi.Statement;
 
 /**
  * Modify the database
  * @author Richard Pham
- *
+ *Edited by Christina Nguyen
+ *	took out Integer.parse bc quantity is now an int
  */
 public class ModifyDB {
 
 	//MySQL credentials, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
-	private String dburl = new String("jdbc:mysql://cmpe172database.c2yryz8m0mvy.us-east-1.rds.amazonaws.com:3306/userdb");
+	private String dburl = new String("jdbc:mysql://localhost:3306/userdb");
 	private String dbuname = new String("root");
-	private String dbpassword = new String("thomas172");
+	private String dbpassword = new String("password");
 	private String dbdriver = new String("com.mysql.jdbc.Driver");
 
 	//Load driver from MySQL database, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
@@ -49,7 +50,7 @@ public class ModifyDB {
 	}
 
 	
-	//Create table for items
+	//Create table for items, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void createTable() throws SQLException {
 
 		loadDriver(dbdriver);
@@ -72,7 +73,7 @@ public class ModifyDB {
 	}
 
 	
-	//View table for items
+	//View table for items, got help from https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html and https://www.youtube.com/watch?v=_oEOH23OYYQ at 13:02 and 12:15
 	public void viewTable(HttpServletResponse response) throws SQLException {
 
 		loadDriver(dbdriver);
@@ -111,7 +112,7 @@ public class ModifyDB {
 		}
 	}
 
-	//View table for items
+	//View table for items, got help from https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html and https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void viewTable() throws SQLException {
 
 		loadDriver(dbdriver);
@@ -146,7 +147,7 @@ public class ModifyDB {
 		}
 	}
 
-	// View table by name
+	// View table by name, got help from https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html and https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void viewTableByName(String name) throws SQLException {
 
 		loadDriver(dbdriver);
@@ -182,7 +183,7 @@ public class ModifyDB {
 		}
 	}
 
-	// View table by category
+	// View table by category, got help from https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html and https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void viewTableByCategory(String theCategory) throws SQLException {
 
 		loadDriver(dbdriver);
@@ -218,13 +219,12 @@ public class ModifyDB {
 		}
 	}
 
-	// Edit item
+	// Edit item, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void editItem( String name, String category, String price, String quantity, String description, int id) {
 
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
 		String sql = "UPDATE item SET theName = ?, "+
 		"category = ?, price = ?, quantity = ?, "+
 		"theDescription = ? WHERE id = ?";
@@ -247,13 +247,12 @@ public class ModifyDB {
 
 	}
 
-	// View table by name
+	// Delete entry from table, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void deleteEntry(int id) throws SQLException {
 
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
 		String sql = "DELETE FROM item " + "WHERE id = ?";
 
 		try {
@@ -269,20 +268,20 @@ public class ModifyDB {
 		}
 	}
 
-	// Insert an item to database
+	// Insert an item to database, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public String insert(Item item) {
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
+		String result = "Item inserted";
 		String sql = "insert into userdb.item(theName, category, price, quantity, theDescription) values (?,?,?,?,?)";
 
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, item.getName());
 			ps.setString(2, item.getCategory());
-			ps.setString(3, item.getPrice());
-			ps.setString(4, item.getQuantity());
+			ps.setDouble(3, item.getPrice()); //
+			ps.setInt(4, item.getQuantity()); //
 			ps.setString(5, item.getDescription());
 			ps.executeUpdate();
 
@@ -294,7 +293,7 @@ public class ModifyDB {
 
 	}
 
-	// Reduce quantity of item
+	// Reduce quantity of item, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void reduceQuantity(Item item) {
 
 		int q = 0;
@@ -304,9 +303,9 @@ public class ModifyDB {
 		}
 
 		try {
-			q = Integer.parseInt(item.getQuantity());
-			if (q <= 0 || item.getQuantity().contains("-")
-					|| (item.getQuantity().charAt(0) == '0' && item.getCategory().length() == 1)) {
+			q = (item.getQuantity());
+			if (q <= 0 //|| item.getQuantity().contains("-") --do we need this still?
+					|| (item.getQuantity() == 0 && item.getCategory().length() == 1)) {
 				System.out.println("There is no more " + item.getName() + " in stock!");
 				return;
 			}
@@ -318,14 +317,13 @@ public class ModifyDB {
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
 		String sql = "UPDATE item " + "SET quantity = ? " + "WHERE id = ?";
 
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
 			q--;
 			ps.setInt(1, q);
-			ps.setInt(2, Integer.parseInt(item.getId()));
+			ps.setInt(2, (item.getId()));
 			ps.executeUpdate();
 
 			System.out.println("Success");
@@ -337,7 +335,7 @@ public class ModifyDB {
 
 	}
 
-	// Increase quantity of item
+	// Increase quantity of item, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 12:15
 	public void increaseQuantity(Item item) {
 
 		int q = 0;
@@ -347,7 +345,7 @@ public class ModifyDB {
 		}
 
 		try {
-			q = Integer.parseInt(item.getQuantity());
+			q = (item.getQuantity());
 		} catch (Exception e) {
 			System.out.println("Unable to get quantity of item");
 			return;
@@ -356,14 +354,13 @@ public class ModifyDB {
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
-		String result = "data entered successfully";
 		String sql = "UPDATE item " + "SET quantity = ? " + "WHERE id = ?";
 
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
 			q++;
 			ps.setInt(1, q);
-			ps.setInt(2, Integer.parseInt(item.getId()));
+			ps.setInt(2, (item.getId()));
 			ps.executeUpdate();
 
 			System.out.println("Success");

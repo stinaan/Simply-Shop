@@ -1,22 +1,21 @@
 package com.example.demo;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.sql.SQLException;
 import java.util.Arrays;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-
 
 import com.example.demo.model.Item;
 import com.example.mysqlcommands.ModifyDB;
 
 @SpringBootApplication
-public class Application {
+public class SimplyShopApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(SimplyShopApplication.class, args);
+		
 		
 		
 		/**
@@ -59,10 +58,6 @@ public class Application {
         
 */
 
-		
 	}
-	
-
-	
 
 }
