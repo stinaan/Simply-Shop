@@ -1,10 +1,12 @@
 package com.example.demo.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.Length;
@@ -13,7 +15,7 @@ public class Item {
 	//private String name, category, price, quantity, description, id;
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer itemID;
 	
@@ -35,11 +37,11 @@ public class Item {
     @Column(name = "category", nullable = false)
     private String category;
 	
-	@Column(name = "Image", length = Integer.MAX_VALUE, nullable = true)
-	private byte[] image; //added variable for item image -Christina
+    @OneToOne(cascade = {CascadeType.ALL})
+    private ItemImage itemImage;
 	
 
-	public Item(String name, String category, Double price, Integer quantity, String description, Integer id) {
+	public Item(String name, String category, Double price, Integer quantity, String description, Integer id, ItemImage image) {
 		super();
 		this.name = name;
 		this.category = category;
@@ -47,6 +49,7 @@ public class Item {
 		this.quantity = quantity;
 		this.description = description;
 		this.itemID = id;
+		this.itemImage = image;
 	}
 
 	public String getName() {
@@ -102,12 +105,12 @@ public class Item {
 	}
 	
 	//added this for image for item -Christina
-    public byte[] getImage() {
-        return image;
+    public ItemImage getImage() {
+        return itemImage;
     }
  
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setImage(ItemImage image) {
+        this.itemImage = image;
     }
 	
 

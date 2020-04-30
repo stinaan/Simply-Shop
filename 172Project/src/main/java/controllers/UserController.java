@@ -39,7 +39,7 @@ public class UserController {
   }
     
     //finds the user in repo
-    @GetMapping(value = "/users/{userID}")
+    @GetMapping(value = "/api/users/{userID}")
     public User getCustomer(@PathVariable("userID") int userID) {
       
 
@@ -50,14 +50,14 @@ public class UserController {
   }
     
     //finds all users in repo
-    @GetMapping(value = "/users")
+    @GetMapping(value = "/api/users")
     public List<User> getUsers() {
      
       return (List<User>) userRepo.findAll();
     }
     
     //deletes a user in repo
-    @DeleteMapping(value = "/users/{userID}")
+    @DeleteMapping(value = "/api/users/{userID}")
     public void removeCustomer(@PathVariable("userID") int userID, HttpServletResponse httpResponse) {
       
       if(userRepo.existsById(userID)){

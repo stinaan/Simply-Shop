@@ -53,19 +53,17 @@ return "orderForm";
 @RestController
 public class MainController {
 	
-	   private static final int INITIAL_PAGE = 0;
 
-	    private final ItemService itemServ;
-
-	    @Autowired
-	    public MainController(ItemService itemServo) {
-	        this.itemServ = itemServo;
-	    }
-
-	@GetMapping("/")
-	public String home() {
-	      return "index";
+	@GetMapping("/api/home")
+	public String loadHome() {
+	      return "home";
 	   }
+	
+	//Use this to test the connection
+	@RequestMapping("/api/hello")
+	public String sayHello() {
+		return "Hello do I work??????";
+	}
 
 	   
 

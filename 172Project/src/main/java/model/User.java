@@ -1,6 +1,9 @@
 package com.example.demo.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 @Entity(name="user")
 public class User{
@@ -13,20 +16,63 @@ public class User{
     this.password = password;
 
   }
-  @Id
-
-  @GeneratedValue(strategy=GenerationType.AUTO)
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
   private long userID;
 
-  @Column(nullable = false, length = 30)
+  @Column(name = "firstName", nullable = false)
+  @NotEmpty(message = "*Please provide your first name")
   private String firstName;
 
-  @Column(nullable = false, length = 30)
+  @Column(name = "lastName", nullable = false)
+  @NotEmpty(message = "*Please provide your last name")
   private String lastName;
   
-  @Column(nullable = false, length = 30)
+  @Column(name = "username", nullable = false, unique = true)
+  @NotEmpty(message = "*Please enter a username")
   private String username;
 
-  @Column(nullable = false, length = 30)
+  @Column(name = "password", nullable = false)
+  @Length(min = 3, message = "*Password needs to be atleast a length of 3 characters")
+  @NotEmpty(message = "*Please enter a password")
   private String password;
+  
+  
+  //set
+  public void setUserName(String userName) {
+      this.username = userName;
+  }
+
+  public void setFirstName(String first) {
+	  this.firstName = first;
+  }
+  public void setLastName(String last) {
+	  this.lastName = last;
+  }
+    public void setPassword(String aPassword) {
+      this.password = aPassword;
+  }
+    
+    //get
+  public String getPassword() {
+      return password;
+  }
+  public String getUserName() {
+      return username;
+  }
+
+  public String getFirstName() {
+	  return firstName;
+  }
+  public String getLastName() {
+	  return lastName;
+  }
+  
+  public String getAllInfo() {
+      return "[" + this.userID + "," + this.username + "," + this.password + "," + this.firstName + "," + this.lastName + "]";
+  }
+
+
+
+
 }

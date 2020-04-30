@@ -20,7 +20,7 @@ public class RegisterController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/register")
+    @GetMapping(value = "/api/register")
     public ModelAndView registration() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", new User());
@@ -28,7 +28,7 @@ public class RegisterController {
         return modelAndView;
     }
 
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/api/register")
     public ModelAndView createUser(@Valid User user, BindingResult bindingResult) {
 
         if (userService.findByUsername(user.getUserName()).isPresent()) { //checks if username is unique
@@ -38,7 +38,7 @@ public class RegisterController {
         ModelAndView modelAndView = new ModelAndView();
 
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("/register"); //redirects the view back
+            modelAndView.setViewName("/api/register"); //redirects the view back
         } else {
             // Registration successful, save user
             // Set user role to USER and set it as active
@@ -46,7 +46,7 @@ public class RegisterController {
 
             modelAndView.addObject("success", "Account created!");
             modelAndView.addObject("user", new User());
-            modelAndView.setViewName("/login"); //redirects back to login
+            modelAndView.setViewName("/api/login"); //redirects back to login
         }
         return modelAndView;
     }

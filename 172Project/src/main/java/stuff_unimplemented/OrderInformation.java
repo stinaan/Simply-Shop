@@ -3,6 +3,16 @@ package com.example.demo.model;
 import javax.persistence.*;
 
 public class OrderInformation {
+	/*
+	public OrderInformation(String name, String category, String price, String quantity, String description, String id) {
+		super();
+		this.name = name;
+		this.category = category;
+		this.price = price;
+		this.quantity = quantity;
+		this.description = description;
+		this.id = id;
+	}
 	
 		@Id
 	    @Column(name = "ID", length = 50, nullable = false)
@@ -72,6 +82,6 @@ public class OrderInformation {
 	    }
 	    public double getAmount() {
 	        return amount;
-	    }
+	    }*/
 	 
 }
