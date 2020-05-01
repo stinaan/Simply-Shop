@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aws-context="http://www.springframework.org/schema/cloud/aws/context"
+       xmlns:jdbc="http://www.springframework.org/schema/cloud/aws/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                           http://www.springframework.org/schema/cloud/aws/context
+                           http://www.springframework.org/schema/cloud/aws/context/spring-cloud-aws-context-1.0.xsd
+                           http://www.springframework.org/schema/cloud/aws/jdbc             
+                           http://www.springframework.org/schema/cloud/aws/jdbc/spring-cloud-aws-jdbc-1.0.xsd">
+   
+   <aws-context:context-credentials>
+   <!-- Line 13 sets the access key and secret key required by the SDK. It’s important to 
+   note that these values should not be set directly in your configuration or properties 
+   files and should be passed to the application on start up (via environment or system 
+   variables). The secret key as the name suggests is very sensitive and if compromised 
+   will provide a user with access to all AWS services on your account. Make sure this 
+   value is not checked into source control, especially if your code is in a public 
+   repository. It’s common for applications to trawl public repositories looking for keys 
+   that are subsequently used to compromise AWS accounts. 
+   
+   But, we can just hard code it since our github is private + project is only for SJSU-->
+      <aws-context:simple-credentials access-key="AKIAVRMN5GGM6TJ5SKOL" secret-key="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"/>
+   </aws-context:context-credentials>
+   <aws-context:context-resource-loader/>
+   <!-- ^^ this is required for S3 if we use -->
+</beans>
