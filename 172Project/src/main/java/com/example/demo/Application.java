@@ -1,36 +1,41 @@
 package com.example.demo;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.model.Item;
 import com.example.mysqlcommands.ModifyDB;
 
-@SpringBootApplication
-public class Application {
 
+@SpringBootApplication
+@RestController
+public class Application {
+	//Print message when application is run on docker; go help from https://www.youtube.com/watch?v=e3YERpG2rMs at 3:17
+	@GetMapping("/docker")
+	public String getMessage()
+	{
+		return "If you see this, docker worked";
+	}
+	
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 		
-		
-		/**
 		//FOR TESTING PURPOSES ONLY
 		ModifyDB test = new ModifyDB();
 		
-		Item item = new Item("Car","Vehicle","29999.99","2","drive it!","1");
+		Item item = new Item("Car","Vehicle",2.00,2,"drive it!",1,null);
+		
+		System.out.println(item.getDescription());
 		//Item item = new Item("Cheese","Dairy","3.99","8","eat it","7");
 		
 		//test.insert(item);
 		
 		//test.increaseQuantity(item);
 		
-		test.editItem("Cheese","Dairy","4.99","8","eat it",1);
+		//test.editItem("Cheese","Dairy","4.99","8","eat it",1);
 
 		
 		
@@ -40,29 +45,7 @@ public class Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		**/
-		
-		/* can use this for reference -Christina
-        
-        //retrieve item
-       // Item item = table.getItem(itemSpec);
-        Item item = table.getItem("Artist", "Psy", "Song", "Gangnam Style");
-        System.out.println("Item received: " + item.toString());
-        
-        //Logger logger = LoggerFactory.getLogger(ReadData.class);
-       // logger.info("can u see this");
-        
-        //SpringApplication.run(ReadData.class, args);
-        //All that you need to do is to add @SpringBootApplication and 
-        //use SpringApplication.run() static method to launch the Spring Application context.
-        
-        
-*/
-
 		
 	}
-	
-
-	
 
 }

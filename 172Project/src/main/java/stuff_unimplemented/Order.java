@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package stuff_unimplemented;
 
 import java.util.Date;
 

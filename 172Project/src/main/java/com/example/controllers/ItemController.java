@@ -44,6 +44,26 @@ private ItemImageService imageService;
     itemRepo.save(item);
     return item; 
   }
+  
+  //edit item in repo
+  @PostMapping(value = "/api/itemEdit") 
+  public @ResponseBody Item editItem(
+		  				 @RequestParam(value="name", required=true) String name,
+                         @RequestParam(value="category", required=true) String category,
+                         @RequestParam(value="price", required=true) double price,
+                         @RequestParam(value="quantity", required=true) int quantity,
+                         @RequestParam(value="description", required=true) String description,
+                         @RequestParam(value="id", required=true) Integer itemID,
+                         @RequestParam(value="image", required=true) MultipartFile image) throws Exception {
+    Item item = getItem(itemID);
+    item.setName(name);
+    item.setCategory(category);
+    item.setPrice(price);
+    item.setQuantity(quantity);
+    item.setDescription(description);
+    item.setImage((ItemImage) image);
+    return item; 
+  }
     
     //finds the user in repo
     @GetMapping(value = "/api/items/{itemID}")
@@ -53,28 +73,6 @@ private ItemImageService imageService;
       return item;
 
   }
-    
-    
-    //edit item in repo
-    @PostMapping(value = "/api/itemEdit") 
-    public @ResponseBody Item editItem(
-  		  				 @RequestParam(value="name", required=true) String name,
-                           @RequestParam(value="category", required=true) String category,
-                           @RequestParam(value="price", required=true) double price,
-                           @RequestParam(value="quantity", required=true) int quantity,
-                           @RequestParam(value="description", required=true) String description,
-                           @RequestParam(value="id", required=true) Integer itemID,
-                           @RequestParam(value="image", required=true) MultipartFile image) throws Exception {
-      Item item = getItem(itemID);
-      item.setName(name);
-      item.setCategory(category);
-      item.setPrice(price);
-      item.setQuantity(quantity);
-      item.setDescription(description);
-      item.setImage((ItemImage) image);
-      return item; 
-    }
-    
     
     //finds all items in repo
     @GetMapping(value = "/api/items")
