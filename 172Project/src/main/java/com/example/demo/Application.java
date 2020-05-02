@@ -4,13 +4,20 @@ import java.sql.SQLException;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.model.Item;
-import com.example.mysqlcommands.ModifyDB;
+import com.example.demo.mysqlcommands.ModifyDB;
+
+import com.example.demo.controllers.*;
+import com.example.demo.*;
 
 
 @SpringBootApplication
+@EnableConfigurationProperties({
+	
+})
 @RestController
 public class Application {
 	//Print message when application is run on docker; go help from https://www.youtube.com/watch?v=e3YERpG2rMs at 3:17

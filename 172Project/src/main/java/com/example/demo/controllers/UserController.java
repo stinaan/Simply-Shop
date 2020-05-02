@@ -1,4 +1,4 @@
-package com.example.controllers;
+package com.example.demo.controllers;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.User;
-import com.example.repository.UserRepository;
+import com.example.demo.repository.UserRepository;
 
 
 

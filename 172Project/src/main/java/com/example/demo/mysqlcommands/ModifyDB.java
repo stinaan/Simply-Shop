@@ -1,4 +1,4 @@
-package com.example.mysqlcommands;
+package com.example.demo.mysqlcommands;
 
 import java.io.IOException;
 import java.sql.Connection;

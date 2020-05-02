@@ -1,4 +1,4 @@
-package com.example.controllers;
+package com.example.demo.controllers;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,13 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.Item;
 import com.example.demo.model.ItemImage;
-import com.example.repository.ItemRepository;
-import com.example.service.ItemImageService;
+import com.example.demo.repository.ItemRepository;
+import com.example.demo.service.ItemImageService;
 
 
 
 
 @RestController
+@RequestMapping("/api")
 public class ItemController {
   
   @Autowired

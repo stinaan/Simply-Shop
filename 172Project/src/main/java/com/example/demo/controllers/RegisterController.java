@@ -1,4 +1,4 @@
-package stuff_unimplemented;
+package com.example.demo.controllers;
 
 import javax.validation.Valid;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.User;
-import com.example.service.UserService;
+import com.example.demo.service.UserService;
 
 public class RegisterController {
 	

@@ -1,11 +1,11 @@
-package com.example.service;
+package com.example.demo.service;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.demo.model.User;
-import com.example.repository.UserRepository;
+import com.example.demo.repository.UserRepository;
 
 
 public class UserServiceImpl implements UserService{
