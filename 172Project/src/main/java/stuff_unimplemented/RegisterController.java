@@ -1,4 +1,4 @@
-package com.example.controllers;
+package stuff_unimplemented;
 
 import javax.validation.Valid;
 

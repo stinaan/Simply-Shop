@@ -21,9 +21,9 @@ import com.example.demo.model.Item;
 public class ModifyDB {
 
 	//MySQL credentials, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
-	private String dburl = new String("jdbc:mysql://localhost:3306/userdb");
+	private String dburl = new String("jdbc:mysql://cmpe172database.c2yryz8m0mvy.us-east-1.rds.amazonaws.com:3306/userdb");
 	private String dbuname = new String("root");
-	private String dbpassword = new String("password");
+	private String dbpassword = new String("thomas172");
 	private String dbdriver = new String("com.mysql.jdbc.Driver");
 
 	//Load driver from MySQL database, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
