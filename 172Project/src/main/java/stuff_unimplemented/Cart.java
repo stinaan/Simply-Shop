@@ -1,4 +1,6 @@
-package com.example.demo.model;
+package stuff_unimplemented;
+
+import com.example.model.User;
 
 public class Cart {
 	  private int orderNum;

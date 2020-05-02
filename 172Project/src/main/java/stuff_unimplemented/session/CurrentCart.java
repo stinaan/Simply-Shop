@@ -1,4 +1,4 @@
-package com.example.session;
+package stuff_unimplemented.session;
 
 import javax.servlet.http.HttpServletRequest;
 
