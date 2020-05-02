@@ -43,7 +43,7 @@ const Basepage = () => {
                     </Switch>
                 </main>
                 <footer>
-                    <p>This is the footer.</p>
+                    <p>Created by Adam Ball, Christina Nguyen, and Richard Pham. CMPE172, Spring 2020. <a href="https://github.com/richardphamsjsu2016/172project">See the GitHub code here.</a></p>
                 </footer>
             </pagegrid>
         </div>
