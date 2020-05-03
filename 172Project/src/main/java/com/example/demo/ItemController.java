@@ -48,9 +48,9 @@ private ItemImageService imageService;
   private JdbcTemplate temp;
   
   
-  //adds user to repo
-  @PostMapping(value = "/api/items") 
-  public @ResponseBody Item createItem(
+  @PostMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
+  @ResponseBody
+  public Item createItem(
 		  				 @RequestParam(value="name", required=true) String name,
                          @RequestParam(value="category", required=true) String category,
                          @RequestParam(value="price", required=true) double price,
@@ -65,14 +65,15 @@ private ItemImageService imageService;
   }
   
   //edit item in repo
-  @PostMapping(value = "/api/itemEdit") 
-  public @ResponseBody Item editItem(
+  @PostMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
+  @ResponseBody
+  public Item editItem(
 		  				 @RequestParam(value="name", required=true) String name,
                          @RequestParam(value="category", required=true) String category,
                          @RequestParam(value="price", required=true) double price,
                          @RequestParam(value="quantity", required=true) int quantity,
                          @RequestParam(value="description", required=true) String description,
-                         @RequestParam(value="id", required=true) Integer itemID,
+                         @PathVariable("itemID") int itemID,
                          @RequestParam(value="image", required=true) MultipartFile image) throws Exception {
     Item item = getItem(itemID);
     item.setName(name);
@@ -81,7 +82,26 @@ private ItemImageService imageService;
     item.setQuantity(quantity);
     item.setDescription(description);
     item.setImage((ItemImage) image);
-    return item; 
+    
+    loadDriver(dbdriver);
+
+	Connection con = getConnection();
+
+	java.sql.Statement stmt = null;
+	String query = "UPDATE userdb.item SET name = "+name+", category = "+category+", description = "+description+", price = "+price+", quantity = "+quantity+" WHERE id = "+itemID+" ";
+
+	try {
+		stmt = con.createStatement();
+		ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+		
+	} catch (SQLException e) {
+		System.out.println("SQL Exception");
+	} finally {
+		if (stmt != null) {
+			stmt.close();
+		}
+	}
+	return null;
   }
   
   
@@ -116,7 +136,8 @@ private ItemImageService imageService;
 	}
     
     //finds the user in repo
-    @GetMapping(value = "/api/items/{itemID}")
+    @GetMapping(value = "/api/items/{itemID}", produces = "application/json; charset=UTF-8")
+    @ResponseBody
     public Item getItem(@PathVariable("itemID") int itemID) throws SQLException {
       
     	loadDriver(dbdriver);
@@ -160,7 +181,8 @@ private ItemImageService imageService;
   }
     
     //finds all items in repo
-    @GetMapping(value = "/api/items")
+    @GetMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
+    @ResponseBody
     public List<Item> getItems() throws SQLException {
     	List<Item> allItems = new ArrayList<Item>();
     	loadDriver(dbdriver);
