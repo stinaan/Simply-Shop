@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.model.Item;
@@ -12,6 +13,7 @@ import com.example.mysqlcommands.ModifyDB;
 
 @SpringBootApplication
 @RestController
+@ComponentScan("com.example.repository")
 public class Application {
 	//Print message when application is run on docker; go help from https://www.youtube.com/watch?v=e3YERpG2rMs at 3:17
 	@GetMapping("/docker")

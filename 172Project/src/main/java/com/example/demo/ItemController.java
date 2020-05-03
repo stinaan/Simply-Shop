@@ -1,4 +1,4 @@
-package com.example.controllers;
+package com.example.demo;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
