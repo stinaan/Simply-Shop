@@ -1,17 +1,22 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 /**
  * Represents an entire island that contains all of the items in the database.
  */
 const ItemGridcomp = () => {
-    let itemsJson;
-    fetch('/api/items/').then(res => {
-        itemsJson = res.text();
-    })
+    const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        fetch('/api/items', {
+            accept: "application/json"
+        })
+        .then(response => response.text())
+        .then(message => { setMessage(message); });
+    },[]);
 
     return (
         <div className="island">
-            {itemsJson}
+            {message}
         </div>
     );
 }
