@@ -8,10 +8,10 @@ import ItemGridcomp from '../comps/itemGrid';
 const Itemspage = () => {
     return (
         <div>
-            <island>
+            <div className="island">
                 <h1>Available Items</h1>
                 <p>Here's a list of all of the items currently available at our store!</p>
-            </island>
+            </div>
             <ItemGridcomp/>
         </div>
     );

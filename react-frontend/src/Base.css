@@ -127,7 +127,7 @@ footer {
 }
 
 /* setting up the base page layout with a css grid */
-pagegrid {
+#pagegrid {
     display: grid;
     grid: "header header header" auto
           "left main right" 1fr
@@ -189,12 +189,14 @@ header button {
     border-radius: var(--xxs);
     background-color: var(--b-in);
     border-style: none;
-    padding: 6px 8px;
 }
 
 header button a {
-    padding: 6px 8px;
     color: var(--f-in);
+}
+
+header button, header button a {
+    padding: 6px 8px;
 }
 
 /* header changes on small screens */
@@ -219,8 +221,8 @@ header button a {
         text-align: center;
     }
 
-    header button a {
-        padding: 10px 14px;
+    header button, header button a {
+        padding: 12px 14px;
     }
 }
 
@@ -236,6 +238,12 @@ footer {
 main {
     padding: var(--xl) 0;
 }
-main island:not(:last-child) {
+main .island:not(:last-child) {
     margin-bottom: var(--xl);
+}
+main .island >* {
+    margin: 0 0 var(--lg);
+}
+main .island >:last-child {
+    margin-bottom: 0;
 }

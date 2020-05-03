@@ -32,7 +32,7 @@ const Basepage = () => {
     return (
         <Router>
         <div id="base">
-            <pagegrid>
+            <div id="pagegrid">
                 <header>
                     <Navcomp/>
                 </header>
@@ -49,7 +49,7 @@ const Basepage = () => {
                 <footer>
                     <p>Created by Adam Ball, Christina Nguyen, and Richard Pham. CMPE172, Spring 2020. <a href="https://github.com/richardphamsjsu2016/172project">See the GitHub code here.</a></p>
                 </footer>
-            </pagegrid>
+            </div>
         </div>
         </Router>
     );

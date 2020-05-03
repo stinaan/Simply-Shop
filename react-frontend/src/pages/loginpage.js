@@ -7,10 +7,10 @@ import React from 'react';
 const Loginpage = () => {
     return (
         <div>
-            <island>
+            <div className="island">
                 <h1>Login</h1>
                 <p>If you're an administrator, use this page to log in.</p>
-            </island>
+            </div>
         </div>
     );
 }
