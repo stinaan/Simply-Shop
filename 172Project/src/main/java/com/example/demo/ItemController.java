@@ -37,7 +37,10 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.demo.model.Item;
 import com.example.demo.model.ItemImage;
 import com.example.repository.ItemRepository;
@@ -100,6 +103,8 @@ private ItemImageService imageService;
 			  .build();
 	String bucketName = "cmpe172project";
 	
+	String imageBaseURI = "https://cmpe172project.s3-us-west-1.amazonaws.com/images/";
+	
 	@RequestMapping(value = "/api/testbucket")
 	public String testBucket() {
 		 
@@ -109,8 +114,15 @@ private ItemImageService imageService;
 		 return "no bucket found";
 	}
 	
+	//test upload
 	@RequestMapping(value = "/api/testbucket/upload")
 	public String testImageUpload() {
+		/*
+		 *     @PostMapping("/upload")
+    public String uploadFile(@RequestPart(value = "file") MultipartFile file) {
+        return this.amazonClient.upload(file);
+    }
+		 */
 		 
 		if(s3client.doesBucketExist(bucketName)) {
 			/*
@@ -127,6 +139,67 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 		}
 		 return "upload failed";
 	}
+	
+	//test delete
+	@RequestMapping(value = "/api/testbucket/delete")
+	public String testImageDelete() {
+		 
+		if(s3client.doesBucketExist(bucketName)) {
+			/*
+			 * Be careful to set the correct content type in the metadata object before directly sending a stream. Unlike file uploads, content types from input streams cannot be automatically determined. If the caller doesn't explicitly set the content type, it will not be set in Amazon S3.
+Content length must be specified before data can be uploaded to Amazon S3. Amazon S3 explicitly requires that the content length be sent in the request headers before it will accept any of the data. If the caller doesn't provide the length, the library must buffer the contents of the input stream in order to calculate it.
+			 */
+			ObjectListing objectListing = s3client.listObjects(bucketName);
+			for(S3ObjectSummary os : objectListing.getObjectSummaries()) {
+				// LOG.info(os.getKey());
+			}
+				
+			//if ()
+			s3client.deleteObject(bucketName,"images/test.png");
+			
+			return "delete success";
+		}
+		 return "upload failed";
+	}
+  
+	//test image retrieving
+	@RequestMapping(value = "/api/testbucket/images/{imageID}")
+	public String testImageRetrieve(@PathVariable("imageID") String imageID) {
+		String photoID = "";
+
+		if(s3client.doesBucketExist(bucketName)) {
+			//ObjectListing objectListing = s3client.listObjects(bucketName);
+			//photoID+="raw imageID:"+imageID+" | ";
+			/*for(S3ObjectSummary os : objectListing.getObjectSummaries()) {
+				//photoID += "raw os value:"+os.getKey()+"  |  ";
+				//String checkID = "images/"+imageID;
+				//photoID += "checkingID:"+checkID+"  |  ";
+				if (os.getKey().matches("images/"+imageID+"")) {
+					photoID = os.getKey();
+					//return photoID+" found!";
+				}
+				
+
+			}*/
+			S3Object object = s3client.getObject(bucketName, "images/"+imageID+"");
+			if (object.getKey() != null) {
+			//return object.getKey();
+				 return "<html><img src = \"https://cmpe172project.s3-us-west-1.amazonaws.com/images/testPhoto.png\"></html>";
+
+			}
+			 return imageID+" imageID not found in bucket";
+
+			
+			
+			//GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest("bucketname", "path/to/image");
+			//String url = conn.generatePresignedUrl(request)
+				
+			
+			
+		}
+		 return "bucket does not exist!";
+	}
+  
   
   
   
