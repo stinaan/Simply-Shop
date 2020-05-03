@@ -8,7 +8,7 @@ const Homepage = () => {
     return (
       <island>
         <h1>Simply Shop</h1>
-        <p>This is the home page!</p>
+        <p>Welcome to the Simply Shop website!</p>
       </island>
     );
 }

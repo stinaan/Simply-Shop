@@ -13,9 +13,8 @@ const Navcomp = () => {
         </span>
         <ul>
           <li><NavLink to="/">Home</NavLink></li>
+          <li><NavLink to="/items">Items</NavLink></li>
           <li><NavLink to="/stylepage">Stylepage</NavLink></li>
-          <li><NavLink to="/react-default">React Default Page</NavLink></li>
-          <li><NavLink to="/garbage">Error Page</NavLink></li>
         </ul>
         <button id="login-button">
           <NavLink to="/login">Login as Admin</NavLink>

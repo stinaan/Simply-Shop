@@ -61,10 +61,8 @@
     --xl: 36px;
     --xxl: 48px;
 
-    --header-height: 72px;
     --minimum-side-width: var(--xl);
     --main-width: 960px;
-    --footer-height: 48px;
 }
 
 /* visual styling */
@@ -92,6 +90,10 @@ blockquote {
     margin: 0;
     padding: var(--sm) var(--xl);
     background-color: var(--b-md);
+}
+
+ul {
+    margin: 0;
 }
 
 /* preformatted and code block styling */
@@ -127,16 +129,16 @@ footer {
 /* setting up the base page layout with a css grid */
 pagegrid {
     display: grid;
-    grid: "header header header" minmax(var(--header-height), auto)
-          "left main right" 1fr 
-          "footer footer footer" minmax(var(--header-height), auto)
+    grid: "header header header" auto
+          "left main right" 1fr
+          "footer footer footer" auto
         / minmax(var(--minimum-side-width), 1fr) minmax(0px, var(--main-width)) minmax(var(--minimum-side-width), 1fr);
     height: 100vh;
 }
 header { grid-area: header; }
 main { grid-area: main; }
 footer { grid-area: footer; }
-header, footer { padding: 0 var(--minimum-side-width); }
+header, footer { padding: var(--md) var(--minimum-side-width); }
 
 /* header and footer organization */
 
@@ -162,6 +164,14 @@ header nav ul {
     margin-left: var(--lg);
 }
 
+header nav ul > {
+    display: inline-flex;
+}
+
+header nav ul a {
+    padding: var(--sm) var(--xs);
+}
+
 header a {
     text-decoration: none;
 }
@@ -171,24 +181,54 @@ header nav ul li:not(:last-child) {
 }
 
 #nav-title {
+    text-align: center;
     font-size: 24pt;
 }
 
 header button {
     border-radius: var(--xxs);
-    padding: 6px 8px;
     background-color: var(--b-in);
     border-style: none;
+    padding: 6px 8px;
 }
 
 header button a {
+    padding: 6px 8px;
     color: var(--f-in);
+}
+
+/* header changes on small screens */
+@media screen and (max-width: 660px) {
+    header {
+        flex-flow: column nowrap;
+    }
+
+    header nav {
+        flex-flow: column nowrap;
+    }
+
+    header nav ul {
+        flex-flow: column nowrap;
+        justify-content: center;
+        margin: var(--lg) 0;
+    }
+
+    header nav ul li:not(:last-child) {
+        margin-right: 0;
+        margin-bottom: var(--lg);
+        text-align: center;
+    }
+
+    header button a {
+        padding: 10px 14px;
+    }
 }
 
 footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 /* positioning of main content */
