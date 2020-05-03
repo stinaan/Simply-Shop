@@ -4,14 +4,14 @@ import React from 'react';
  * Represents an entire island that contains all of the items in the database.
  */
 const ItemGridcomp = () => {
-    let items = [];
-    for(var i = 0; i < 5; i++) {
-        items.push(<ItemGridElem/>);
-    }
+    let itemsJson;
+    fetch('/api/items/1').then(res => {
+        itemsJson = res.text();
+    })
 
     return (
         <div className="island">
-            {items}
+            {itemsJson}
         </div>
     );
 }
