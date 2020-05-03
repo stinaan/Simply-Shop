@@ -9,6 +9,7 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +30,7 @@ public class ItemImageService {
   private AmazonS3Client s3;
 
   public ItemImage addImage(MultipartFile multipartFile) throws Exception {
+	  
     try{
       File fileToUpload = (File) multipartFile;
       DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd-HH-mm-ss");
@@ -45,7 +47,9 @@ public class ItemImageService {
     catch(Exception ex){ 
       throw new Exception("Can't add to s3", ex);
     }
+    
   }
+  
   public void deleteImage(ItemImage image){
 	  
 	  s3.deleteObject(new DeleteObjectRequest(s3bucket, image.getImageKey())); 

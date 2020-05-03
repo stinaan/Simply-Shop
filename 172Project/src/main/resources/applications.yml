@@ -1,0 +1,5 @@
+amazonProperties:
+  endpointUrl: https://s3.us-east-1.amazonaws.com
+  accessKey: AKIAVRMN5GGM6TJ5SKOL
+  secretKey: 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
+  bucketName: cmpe172project

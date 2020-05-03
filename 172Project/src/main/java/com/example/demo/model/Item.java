@@ -15,7 +15,7 @@ public class Item {
 	//private String name, category, price, quantity, description, id;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private Integer itemID;
 	
@@ -50,6 +50,15 @@ public class Item {
 		this.description = description;
 		this.itemID = id;
 		this.itemImage = image;
+	}
+	public Item(String name, String category, Double price, Integer quantity, String description, Integer id) {
+		super();
+		this.name = name;
+		this.category = category;
+		this.price = price;
+		this.quantity = quantity;
+		this.description = description;
+		this.itemID = id;
 	}
 
 	public String getName() {
