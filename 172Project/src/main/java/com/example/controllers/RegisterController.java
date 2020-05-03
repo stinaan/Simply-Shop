@@ -19,6 +19,7 @@ public class RegisterController {
     public RegisterController(UserService userService) {
         this.userService = userService;
     }
+    
 
     @GetMapping(value = "/api/register")
     public ModelAndView registration() {

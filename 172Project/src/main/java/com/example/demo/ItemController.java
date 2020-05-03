@@ -31,9 +31,10 @@ public class ItemController {
   private ItemRepository itemRepo;
   @Autowired
 private ItemImageService imageService;
+  
+  
   //adds user to repo
   @PostMapping(value = "/api/items") 
-  @Bean
   public @ResponseBody Item createItem(
 		  				 @RequestParam(value="name", required=true) String name,
                          @RequestParam(value="category", required=true) String category,
@@ -50,7 +51,6 @@ private ItemImageService imageService;
   
   //edit item in repo
   @PostMapping(value = "/api/itemEdit") 
-  @Bean
   public @ResponseBody Item editItem(
 		  				 @RequestParam(value="name", required=true) String name,
                          @RequestParam(value="category", required=true) String category,
@@ -71,7 +71,6 @@ private ItemImageService imageService;
     
     //finds the user in repo
     @GetMapping(value = "/api/items/{itemID}")
-    @Bean
     public Item getItem(@PathVariable("itemID") int itemID) {
       
     	Item item = itemRepo.findById(itemID).get();
@@ -80,18 +79,22 @@ private ItemImageService imageService;
   }
     
     //finds all items in repo
-    @RequestMapping(value = "/api/items")
-    @Bean
+    @GetMapping(value = "/api/items")
     public List<Item> getItems() {
       
       return (List<Item>) itemRepo.findAll();
     }
     
+	//Use this to test the connection
+	@RequestMapping("/api/help")
+	public String sayHello() {
+		return "Helppppppp";
+	}
+    
     
     
     //deletes a user in repo
     @DeleteMapping(value = "/api/items/{itemID}")
-    @Bean
     public void removeItem(@PathVariable("itemID") int itemID, HttpServletResponse httpResponse) {
       
       if(itemRepo.existsById(itemID)){

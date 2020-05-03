@@ -29,7 +29,6 @@ public class ItemImageService {
   @Autowired
   private AmazonS3Client s3;
 
-  @Bean
   public ItemImage addImage(MultipartFile multipartFile) throws Exception {
 	  
     try{
@@ -51,7 +50,6 @@ public class ItemImageService {
     
   }
   
-  @Bean
   public void deleteImage(ItemImage image){
 	  
 	  s3.deleteObject(new DeleteObjectRequest(s3bucket, image.getImageKey())); 

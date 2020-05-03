@@ -28,7 +28,6 @@ public class UserController {
 	  //private FileArchiveService fileArchiveService;
 	  //adds user to repo
 	  @PostMapping(value = "/users")
-	  @Bean
 	  public @ResponseBody User createUser(@RequestParam(value="firstName", required=true) String firstName,
 	                         @RequestParam(value="lastName", required=true) String lastName,
 	                         @RequestParam(value="username", required=true) String username,
@@ -41,7 +40,6 @@ public class UserController {
 	    
 	    //finds the user in repo
 	    @GetMapping(value = "/api/users/{userID}")
-	    @Bean
 	    public User getCustomer(@PathVariable("userID") int userID) {
 	      
 
@@ -53,7 +51,6 @@ public class UserController {
 	    
 	    //finds all users in repo
 	    @GetMapping(value = "/api/users")
-	    @Bean
 	    public List<User> getUsers() {
 	     
 	      return (List<User>) userRepo.findAll();
@@ -61,7 +58,6 @@ public class UserController {
 	    
 	    //deletes a user in repo
 	    @DeleteMapping(value = "/api/users/{userID}")
-	    @Bean
 	    public void removeCustomer(@PathVariable("userID") int userID, HttpServletResponse httpResponse) {
 	      
 	      if(userRepo.existsById(userID)){
