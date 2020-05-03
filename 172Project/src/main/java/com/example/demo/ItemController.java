@@ -1,4 +1,5 @@
 package com.example.demo;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,6 +31,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.example.demo.model.Item;
 import com.example.demo.model.ItemImage;
 import com.example.repository.ItemRepository;
@@ -48,6 +56,80 @@ private ItemImageService imageService;
   
   @Autowired
   private JdbcTemplate temp;
+  
+  
+	//MySQL credentials, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
+	private String dburl = new String("jdbc:mysql://cmpe172database.c2yryz8m0mvy.us-east-1.rds.amazonaws.com:3306/userdb");
+	private String dbuname = new String("root");
+	private String dbpassword = new String("thomas172");
+	private String dbdriver = new String("com.mysql.jdbc.Driver");
+
+	//Load driver from MySQL database, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
+	public void loadDriver(String dbDriver) {
+		try {
+			Class.forName(dbDriver);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	//Load driver from MySQL database, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 16:39
+	public Connection getConnection() {
+		Connection con = null;
+		try {
+			con = DriverManager.getConnection(dburl, dbuname, dbpassword);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return con;
+	}
+	
+	
+	//s3 bucket
+	AWSCredentials credentials = new BasicAWSCredentials(
+			  "AKIAVRMN5GGM6TJ5SKOL", 
+			  "se6DpesQKZq0My2dzgmFLHyxHeJZNuFgcJWXtbzy"
+			);
+	AmazonS3 s3client = AmazonS3ClientBuilder
+			  .standard()
+			  .withCredentials(new AWSStaticCredentialsProvider(credentials))
+			  .withRegion(Regions.US_WEST_1)
+			  .build();
+	String bucketName = "cmpe172project";
+	
+	@RequestMapping(value = "/api/testbucket")
+	public String testBucket() {
+		 
+		if(s3client.doesBucketExist(bucketName)) {
+		    return "bucket:" +bucketName+" exists!";
+		}
+		 return "no bucket found";
+	}
+	
+	@RequestMapping(value = "/api/testbucket/upload")
+	public String testImageUpload() {
+		 
+		if(s3client.doesBucketExist(bucketName)) {
+			/*
+			 * Be careful to set the correct content type in the metadata object before directly sending a stream. Unlike file uploads, content types from input streams cannot be automatically determined. If the caller doesn't explicitly set the content type, it will not be set in Amazon S3.
+Content length must be specified before data can be uploaded to Amazon S3. Amazon S3 explicitly requires that the content length be sent in the request headers before it will accept any of the data. If the caller doesn't provide the length, the library must buffer the contents of the input stream in order to calculate it.
+			 */
+			PutObjectResult por = s3client.putObject(
+					  bucketName, 
+					  "images/testPhoto.png", 
+					  new File("/Users/stina/Pictures/apartment1.jpg")
+					);
+			
+			return por.toString();
+		}
+		 return "upload failed";
+	}
+  
+  
+  
   
   
   @PostMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
@@ -179,35 +261,6 @@ private ItemImageService imageService;
   }
   
   
-
-	//MySQL credentials, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
-	private String dburl = new String("jdbc:mysql://cmpe172database.c2yryz8m0mvy.us-east-1.rds.amazonaws.com:3306/userdb");
-	private String dbuname = new String("root");
-	private String dbpassword = new String("thomas172");
-	private String dbdriver = new String("com.mysql.jdbc.Driver");
-
-	//Load driver from MySQL database, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
-	public void loadDriver(String dbDriver) {
-		try {
-			Class.forName(dbDriver);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	//Load driver from MySQL database, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 16:39
-	public Connection getConnection() {
-		Connection con = null;
-		try {
-			con = DriverManager.getConnection(dburl, dbuname, dbpassword);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return con;
-	}
     
     //finds the user in repo
     @GetMapping(value = "/api/items/{itemID}", produces = "application/json; charset=UTF-8")
