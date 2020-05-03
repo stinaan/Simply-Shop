@@ -5,7 +5,7 @@ import React from 'react';
  */
 const ItemGridcomp = () => {
     let itemsJson;
-    fetch('/api/items/1').then(res => {
+    fetch('/api/items/').then(res => {
         itemsJson = res.text();
     })
 
