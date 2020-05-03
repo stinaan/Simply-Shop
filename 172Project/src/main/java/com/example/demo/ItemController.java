@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.model.Item;
@@ -50,24 +52,80 @@ private ItemImageService imageService;
   
   @PostMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
   @ResponseBody
-  public Item createItem(
+  public ModelAndView createItem(ModelMap model,
 		  				 @RequestParam(value="name", required=true) String name,
                          @RequestParam(value="category", required=true) String category,
                          @RequestParam(value="price", required=true) double price,
                          @RequestParam(value="quantity", required=true) int quantity,
                          @RequestParam(value="description", required=true) String description,
-                         @RequestParam(value="id", required=true) Integer itemID,
+                         //@RequestParam(value="id", required=true) Integer itemID,
                          @RequestParam(value="image", required=true) MultipartFile image) throws Exception {
     ItemImage itemImage = imageService.addImage(image); 
-	Item item = new Item(name,  category,  price,  quantity,  description,  itemID, itemImage);
-    itemRepo.save(item);
-    return item; 
-  }
+	//Item item = new Item(name,  category,  price,  quantity,  description,  itemID, itemImage);
+    //itemRepo.save(item);
+    loadDriver(dbdriver);
+
+	Connection con = getConnection();
+	int itemID = 0;
+
+	java.sql.Statement stmt = null;
+	String query = "insert into userdb.item (name, category, price, quantity, description, image) values ("+name+",+"+category+",+"+price+",+"+quantity+",+"+description+",+1) ";
+
+	try {
+		stmt = con.createStatement();
+		ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+		try {
+			stmt = con.createStatement();
+			String query1 = "select * from userdb.item where name = '"+name+"' && price = "+price;
+			ResultSet rs1 = ((java.sql.Statement) stmt).executeQuery(query1);
+				//stmt = con.createStatement();
+				while (rs1.next()) {
+					int id = rs.getInt("id");
+					String category1 = rs.getString("category");
+					String description1 = rs.getString("description");
+					String theName = rs.getString("name");
+					Double price1 = rs.getDouble("price");
+					int quantity1 = rs.getInt("quantity");
+					
+
+					Item item = new Item();
+					item.setId(id);
+					item.setCategory(category);
+					item.setDescription(description);
+					item.setName(theName);
+					item.setPrice(price);
+					item.setQuantity(quantity);
+					
+					itemID = item.getId();
+					
+				}
+				
+		//model.addAttribute("attribute", "redirectWithRedirectPrefix");
+		return new ModelAndView("redirect:/api/items/"+itemID, model);
+		
+	} catch (SQLException e) {
+		System.out.println("SQL Exception");
+	}
+		//model.addAttribute("attribute", "redirectWithRedirectPrefix");
+		//return new ModelAndView("redirect:/api/items/"+itemID, model);
+		return null;
+		
+	} catch (SQLException e) {
+		System.out.println("SQL Exception");
+	} finally {
+		if (stmt != null) {
+			stmt.close();
+		}
+	}
+	return null;  
+	}
   
-  //edit item in repo
-  @PostMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
+  
+  
+  
+  @RequestMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
   @ResponseBody
-  public Item editItem(
+  public ModelAndView editItem(ModelMap model,
 		  				 @RequestParam(value="name", required=true) String name,
                          @RequestParam(value="category", required=true) String category,
                          @RequestParam(value="price", required=true) double price,
@@ -93,6 +151,22 @@ private ItemImageService imageService;
 	try {
 		stmt = con.createStatement();
 		ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+		String query1 = "select * from userdb.item where name = '"+name+"' && price = "+price;
+		try {
+			//stmt = con.createStatement();
+			ResultSet rs1 = ((java.sql.Statement) stmt).executeQuery(query1);
+			
+			
+			
+			//model.addAttribute("attribute", "redirectWithRedirectPrefix");
+			return new ModelAndView("redirect:/api/items/"+itemID, model);
+			
+		} catch (SQLException e) {
+			System.out.println("SQL Exception");
+		}
+		
+		//model.addAttribute("attribute", "redirectWithRedirectPrefix");
+		return new ModelAndView("redirect:/api/items/"+itemID, model);
 		
 	} catch (SQLException e) {
 		System.out.println("SQL Exception");
@@ -246,7 +320,7 @@ private ItemImageService imageService;
   		Connection con = getConnection();
 
   		java.sql.Statement stmt = null;
-  		String query = "delete from item where id = "+itemID+" ";
+  		String query = "delete from userdb.item where id = "+itemID+" ";
 
   		try {
   			stmt = con.createStatement();
