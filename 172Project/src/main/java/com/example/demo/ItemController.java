@@ -4,6 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,7 @@ public class ItemController {
 private ItemImageService imageService;
   //adds user to repo
   @PostMapping(value = "/api/items") 
+  @Bean
   public @ResponseBody Item createItem(
 		  				 @RequestParam(value="name", required=true) String name,
                          @RequestParam(value="category", required=true) String category,
@@ -47,6 +50,7 @@ private ItemImageService imageService;
   
   //edit item in repo
   @PostMapping(value = "/api/itemEdit") 
+  @Bean
   public @ResponseBody Item editItem(
 		  				 @RequestParam(value="name", required=true) String name,
                          @RequestParam(value="category", required=true) String category,
@@ -67,6 +71,7 @@ private ItemImageService imageService;
     
     //finds the user in repo
     @GetMapping(value = "/api/items/{itemID}")
+    @Bean
     public Item getItem(@PathVariable("itemID") int itemID) {
       
     	Item item = itemRepo.findById(itemID).get();
@@ -75,7 +80,8 @@ private ItemImageService imageService;
   }
     
     //finds all items in repo
-    @GetMapping(value = "/api/items")
+    @RequestMapping(value = "/api/items")
+    @Bean
     public List<Item> getItems() {
       
       return (List<Item>) itemRepo.findAll();
@@ -85,12 +91,14 @@ private ItemImageService imageService;
     
     //deletes a user in repo
     @DeleteMapping(value = "/api/items/{itemID}")
+    @Bean
     public void removeItem(@PathVariable("itemID") int itemID, HttpServletResponse httpResponse) {
       
       if(itemRepo.existsById(itemID)){
     	  Item item = itemRepo.findById(itemID).get();
         //fileArchiveService.deleteImageFromS3(customer.getCustomerImage());
     	  itemRepo.delete(item); 
+    	  
     	  imageService.deleteImage(item.getImage());
 
       }

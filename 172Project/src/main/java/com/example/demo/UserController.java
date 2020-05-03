@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,50 +22,54 @@ import com.example.repository.UserRepository;
 
 @RestController
 public class UserController {
+	@Autowired
+	  private UserRepository userRepo;
+	 // @Autowired
+	  //private FileArchiveService fileArchiveService;
+	  //adds user to repo
+	  @PostMapping(value = "/users")
+	  @Bean
+	  public @ResponseBody User createUser(@RequestParam(value="firstName", required=true) String firstName,
+	                         @RequestParam(value="lastName", required=true) String lastName,
+	                         @RequestParam(value="username", required=true) String username,
+	                         @RequestParam(value="password", required=true) String password) throws Exception {
+	   // CustomerImage customerImage = fileArchiveService.saveFileToS3(image); 
+	    User user = new User(firstName, lastName, username, password);
+	    userRepo.save(user);
+	    return user; 
+	  }
+	    
+	    //finds the user in repo
+	    @GetMapping(value = "/api/users/{userID}")
+	    @Bean
+	    public User getCustomer(@PathVariable("userID") int userID) {
+	      
+
+	      /* validate customer Id parameter */
+	      User customer = userRepo.findById(userID).get();
+	      return customer;
+
+	  }
+	    
+	    //finds all users in repo
+	    @GetMapping(value = "/api/users")
+	    @Bean
+	    public List<User> getUsers() {
+	     
+	      return (List<User>) userRepo.findAll();
+	    }
+	    
+	    //deletes a user in repo
+	    @DeleteMapping(value = "/api/users/{userID}")
+	    @Bean
+	    public void removeCustomer(@PathVariable("userID") int userID, HttpServletResponse httpResponse) {
+	      
+	      if(userRepo.existsById(userID)){
+	    	  User user = userRepo.findById(userID).get();
+	        //fileArchiveService.deleteImageFromS3(customer.getCustomerImage());
+	    	  userRepo.delete(user); 
+	      }
+	      httpResponse.setStatus(HttpStatus.NO_CONTENT.value());
+	    }
   
-  @Autowired
-  private UserRepository userRepo;
- // @Autowired
-  //private FileArchiveService fileArchiveService;
-  //adds user to repo
-  @PostMapping(value = "/users")
-  public @ResponseBody User createUser(@RequestParam(value="firstName", required=true) String firstName,
-                         @RequestParam(value="lastName", required=true) String lastName,
-                         @RequestParam(value="username", required=true) String username,
-                         @RequestParam(value="password", required=true) String password) throws Exception {
-   // CustomerImage customerImage = fileArchiveService.saveFileToS3(image); 
-    User user = new User(firstName, lastName, username, password);
-    userRepo.save(user);
-    return user; 
-  }
-    
-    //finds the user in repo
-    @GetMapping(value = "/api/users/{userID}")
-    public User getCustomer(@PathVariable("userID") int userID) {
-      
-
-      /* validate customer Id parameter */
-      User customer = userRepo.findById(userID).get();
-      return customer;
-
-  }
-    
-    //finds all users in repo
-    @GetMapping(value = "/api/users")
-    public List<User> getUsers() {
-     
-      return (List<User>) userRepo.findAll();
-    }
-    
-    //deletes a user in repo
-    @DeleteMapping(value = "/api/users/{userID}")
-    public void removeCustomer(@PathVariable("userID") int userID, HttpServletResponse httpResponse) {
-      
-      if(userRepo.existsById(userID)){
-    	  User user = userRepo.findById(userID).get();
-        //fileArchiveService.deleteImageFromS3(customer.getCustomerImage());
-    	  userRepo.delete(user); 
-      }
-      httpResponse.setStatus(HttpStatus.NO_CONTENT.value());
-    }
 }
