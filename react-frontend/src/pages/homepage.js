@@ -6,10 +6,10 @@ import React from 'react';
  */
 const Homepage = () => {
     return (
-      <island>
+      <div className="island">
         <h1>Simply Shop</h1>
-        <p>This is the home page!</p>
-      </island>
+        <p>Welcome to the Simply Shop website!</p>
+      </div>
     );
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 const Stylepage = () => {
     return (
-        <div>
+        <div className="island">
             <h1>Simply Shop Stylepage</h1>
             <p>
                 This stylepage is intended for designing

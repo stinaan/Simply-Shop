@@ -6,7 +6,7 @@ import React from 'react';
  */
 const Errorpage = () => {
     return (
-      <div>
+      <div className="island">
         <h1>Error!</h1>
         <p>Sorry, that page doesn't exist!</p>
       </div>

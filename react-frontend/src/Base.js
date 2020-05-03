@@ -23,29 +23,33 @@ import './Base.css';
 import Homepage from './pages/homepage'
 import Errorpage from './pages/errorpage'
 import Stylepage from './pages/stylepage'
+import Loginpage from './pages/loginpage'
 
 import Navcomp from './comps/navigation'
+import Itemspage from './pages/itemspage';
 
 const Basepage = () => {
     return (
         <Router>
         <div id="base">
-            <pagegrid>
+            <div id="pagegrid">
                 <header>
                     <Navcomp/>
                 </header>
                 <main>
                     <Switch>
                     <Route path="/" component={Homepage} exact/>
+                    <Route path="/items" component={Itemspage} exact/>
                     <Route path="/stylepage" component={Stylepage}/>
                     <Route path="/react-default" component={DefaultReactpage}/>
+                    <Route path="/login" component={Loginpage} exact/>
                     <Route component={Errorpage}/>
                     </Switch>
                 </main>
                 <footer>
                     <p>Created by Adam Ball, Christina Nguyen, and Richard Pham. CMPE172, Spring 2020. <a href="https://github.com/richardphamsjsu2016/172project">See the GitHub code here.</a></p>
                 </footer>
-            </pagegrid>
+            </div>
         </div>
         </Router>
     );
