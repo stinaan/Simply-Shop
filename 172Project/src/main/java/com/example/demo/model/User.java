@@ -18,7 +18,7 @@ public class User{
   }
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-  private long userID;
+  private int userID;
 
   @Column(name = "firstName", nullable = false)
   @NotEmpty(message = "*Please provide your first name")
@@ -39,6 +39,10 @@ public class User{
   
   
   //set
+  public void setID(int id) {
+      this.userID = id;
+  }
+  
   public void setUserName(String userName) {
       this.username = userName;
   }
@@ -54,6 +58,9 @@ public class User{
   }
     
     //get
+    public int getID() {
+        return userID;
+    }
   public String getPassword() {
       return password;
   }

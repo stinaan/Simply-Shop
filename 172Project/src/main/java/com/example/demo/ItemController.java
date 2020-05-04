@@ -1,4 +1,5 @@
 package com.example.demo;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +28,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.demo.model.Item;
 import com.example.demo.model.ItemImage;
 import com.example.repository.ItemRepository;
@@ -48,64 +61,6 @@ private ItemImageService imageService;
   private JdbcTemplate temp;
   
   
-  @PostMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
-  @ResponseBody
-  public Item createItem(
-		  				 @RequestParam(value="name", required=true) String name,
-                         @RequestParam(value="category", required=true) String category,
-                         @RequestParam(value="price", required=true) double price,
-                         @RequestParam(value="quantity", required=true) int quantity,
-                         @RequestParam(value="description", required=true) String description,
-                         @RequestParam(value="id", required=true) Integer itemID,
-                         @RequestParam(value="image", required=true) MultipartFile image) throws Exception {
-    ItemImage itemImage = imageService.addImage(image); 
-	Item item = new Item(name,  category,  price,  quantity,  description,  itemID, itemImage);
-    itemRepo.save(item);
-    return item; 
-  }
-  
-  //edit item in repo
-  @PostMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
-  @ResponseBody
-  public Item editItem(
-		  				 @RequestParam(value="name", required=true) String name,
-                         @RequestParam(value="category", required=true) String category,
-                         @RequestParam(value="price", required=true) double price,
-                         @RequestParam(value="quantity", required=true) int quantity,
-                         @RequestParam(value="description", required=true) String description,
-                         @PathVariable("itemID") int itemID,
-                         @RequestParam(value="image", required=true) MultipartFile image) throws Exception {
-    Item item = getItem(itemID);
-    item.setName(name);
-    item.setCategory(category);
-    item.setPrice(price);
-    item.setQuantity(quantity);
-    item.setDescription(description);
-    item.setImage((ItemImage) image);
-    
-    loadDriver(dbdriver);
-
-	Connection con = getConnection();
-
-	java.sql.Statement stmt = null;
-	String query = "UPDATE userdb.item SET name = "+name+", category = "+category+", description = "+description+", price = "+price+", quantity = "+quantity+" WHERE id = "+itemID+" ";
-
-	try {
-		stmt = con.createStatement();
-		ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
-		
-	} catch (SQLException e) {
-		System.out.println("SQL Exception");
-	} finally {
-		if (stmt != null) {
-			stmt.close();
-		}
-	}
-	return null;
-  }
-  
-  
-
 	//MySQL credentials, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ at 14:21
 	private String dburl = new String("jdbc:mysql://cmpe172database.c2yryz8m0mvy.us-east-1.rds.amazonaws.com:3306/userdb");
 	private String dbuname = new String("root");
@@ -134,12 +89,236 @@ private ItemImageService imageService;
 
 		return con;
 	}
+	
+	
+//~~~~~~S3 FUNCTIONS~~~~~~//
+	AWSCredentials credentials = new BasicAWSCredentials(
+			  "AKIAVRMN5GGM6TJ5SKOL", 
+			  "se6DpesQKZq0My2dzgmFLHyxHeJZNuFgcJWXtbzy"
+			);
+	AmazonS3 s3client = AmazonS3ClientBuilder
+			  .standard()
+			  .withCredentials(new AWSStaticCredentialsProvider(credentials))
+			  .withRegion(Regions.US_WEST_1)
+			  .build();
+	String bucketName = "cmpe172project";
+	
+	String imageBaseURI = "https://cmpe172project.s3-us-west-1.amazonaws.com/images/";
+	
+	@RequestMapping(value = "/api/testbucket")
+	public String testBucket() {
+		 
+		if(s3client.doesBucketExist(bucketName)) {
+		    return "bucket:" +bucketName+" exists!";
+		}
+		 return "no bucket found";
+	}
+	
+	//test upload
+	//@RequestMapping(value = "/api/testbucket/upload") -readd this to test manually
+	public String testImageUpload(String imageName, String path) {
+		/*
+		 *     @PostMapping("/upload")
+    public String uploadFile(@RequestPart(value = "file") MultipartFile file) {
+        return this.amazonClient.upload(file);
+    }
+		 */
+		 
+		if(s3client.doesBucketExist(bucketName)) {
+			/*
+			 * Be careful to set the correct content type in the metadata object before directly sending a stream. Unlike file uploads, content types from input streams cannot be automatically determined. If the caller doesn't explicitly set the content type, it will not be set in Amazon S3.
+Content length must be specified before data can be uploaded to Amazon S3. Amazon S3 explicitly requires that the content length be sent in the request headers before it will accept any of the data. If the caller doesn't provide the length, the library must buffer the contents of the input stream in order to calculate it.
+			 */
+			PutObjectResult por = s3client.putObject(
+					  bucketName, 
+					  "images/"+imageName, 
+					  new File(path)
+					);
+			
+			return por.toString();
+		}
+		 return "upload failed";
+	}
+	
+	//test delete
+	//@RequestMapping(value = "/api/testbucket/delete/{imageID}")
+	public String deleteImageFromS3(String imageID) {
+		 
+		if(s3client.doesBucketExist(bucketName)) {
+
+			s3client.deleteObject(bucketName,"images/"+imageID+"");
+			
+			return "delete success";
+		}
+		 return "upload failed";
+	}
+  
+	//test image retrieving
+	//@RequestMapping(value = "/api/testbucket/images/{imageID}")
+	public String testImageRetrieve(String imageID) {//@PathVariable("imageID") String imageID) {
+		String photoID = "";
+	      
+	    	/////////~~~~~~~~~~~~~~~~~~~~~~~~
+	    	
+	    	
+	    	
+		if(s3client.doesBucketExist(bucketName)) {
+			//ObjectListing objectListing = s3client.listObjects(bucketName);
+			//photoID+="raw imageID:"+imageID+" | ";
+			/*for(S3ObjectSummary os : objectListing.getObjectSummaries()) {
+				//photoID += "raw os value:"+os.getKey()+"  |  ";
+				//String checkID = "images/"+imageID;
+				//photoID += "checkingID:"+checkID+"  |  ";
+				if (os.getKey().matches("images/"+imageID+"")) {
+					photoID = os.getKey();
+					//return photoID+" found!";
+				}
+				
+
+			}*/
+			S3Object object = s3client.getObject(bucketName, "images/"+imageID+"");
+			if (object.getKey() != null) {
+			//return object.getKey();
+				 return "<html><img src = \"https://cmpe172project.s3-us-west-1.amazonaws.com/images/"+imageID+"\"></html>";
+
+			}
+			 return imageID+" imageID not found in bucket";
+
+			
+			
+			//GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest("bucketname", "path/to/image");
+			//String url = conn.generatePresignedUrl(request)
+				
+			
+			
+		}
+		 return "bucket does not exist!";
+	}
+  
+  
+  
+  
+
+	
+	
+	
+	//~~~~~~ITEMS FUNCTIONS~~~~~~//
+
+  
+  @PostMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
+  @ResponseBody
+  public ModelAndView createItem(ModelMap model,
+		  				 @RequestParam(value="name", required=true) String name,
+                         @RequestParam(value="category", required=true) String category,
+                         @RequestParam(value="price", required=true) double price,
+                         @RequestParam(value="quantity", required=true) int quantity,
+                         @RequestParam(value="description", required=true) String description,
+                         //@RequestParam(value="id", required=true) Integer itemID,
+                         @RequestParam(value="image", required=true) MultipartFile imageFile) throws Exception {
+   // ItemImage itemImage = imageService.addImage(image); 
+	//Item item = new Item(name,  category,  price,  quantity,  description,  itemID, itemImage);
+    //itemRepo.save(item);
+    loadDriver(dbdriver);
+
+	Connection con = getConnection();
+	int itemID = 0;
+
+	java.sql.Statement stmt = null;
+	
+	//TODO:
+	/*convert imageFile into a File (unless don't need to)
+	 * should be able to retrieve both the file name AND the path (user/image/photo.png, etc)
+	 * call testImageUpload(String imageName, String path)  to upload to s3
+	 * then add imageName to rds (s3 key is formatted "/images/photo.png" but should only save "photo.png" to rds, don't save "/images" or wont work for the other function
+	 * 
+	 */
+	String query = "insert into userdb.item (name, category, price, quantity, description, image) values ("+name+","+category+","+price+","+quantity+","+description+","+imageFile+") ";
+
+	try {
+		stmt = con.createStatement();
+		ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+		
+				
+		//model.addAttribute("attribute", "redirectWithRedirectPrefix");
+		return new ModelAndView("redirect:/api/items/"+itemID, model);
+	
+		
+	} catch (SQLException e) {
+		System.out.println("SQL Exception");
+	} finally {
+		if (stmt != null) {
+			stmt.close();
+		}
+	}
+	return null;  
+	}
+  
+  
+  
+  
+  @RequestMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
+  @ResponseBody
+  public ModelAndView editItem(ModelMap model,
+		  				 @RequestParam(value="name", required=true) String name,
+                         @RequestParam(value="category", required=true) String category,
+                         @RequestParam(value="price", required=true) double price,
+                         @RequestParam(value="quantity", required=true) int quantity,
+                         @RequestParam(value="description", required=true) String description,
+                         @PathVariable("itemID") int itemID,
+                         @RequestParam(value="imageID", required=true) MultipartFile imageID) throws Exception {
+    Item item = getItem(itemID);
+    item.setName(name);
+    item.setCategory(category);
+    item.setPrice(price);
+    item.setQuantity(quantity);
+    item.setDescription(description);
+    //item.setImage(imageID);
+    
+    loadDriver(dbdriver);
+
+	Connection con = getConnection();
+
+	java.sql.Statement stmt = null;
+	String query = "UPDATE userdb.item SET name = "+name+", category = "+category+", description = "+description+", price = "+price+", quantity = "+quantity+" WHERE id = "+itemID+" ";
+
+	try {
+		stmt = con.createStatement();
+		ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+		String query1 = "select * from userdb.item where name = '"+name+"' && price = "+price;
+		try {
+			//stmt = con.createStatement();
+			ResultSet rs1 = ((java.sql.Statement) stmt).executeQuery(query1);
+			
+			
+			
+			//model.addAttribute("attribute", "redirectWithRedirectPrefix");
+			return new ModelAndView("redirect:/api/items/"+itemID, model);
+			
+		} catch (SQLException e) {
+			System.out.println("SQL Exception");
+		}
+		
+		//model.addAttribute("attribute", "redirectWithRedirectPrefix");
+		return new ModelAndView("redirect:/api/items/"+itemID, model);
+		
+	} catch (SQLException e) {
+		System.out.println("SQL Exception");
+	} finally {
+		if (stmt != null) {
+			stmt.close();
+		}
+	}
+	return null;
+  }
+  
+  
     
     //finds the user in repo
     @GetMapping(value = "/api/items/{itemID}", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public Item getItem(@PathVariable("itemID") int itemID) throws SQLException {
       
+    	
     	loadDriver(dbdriver);
 
 		Connection con = getConnection();
@@ -157,9 +336,10 @@ private ItemImageService imageService;
 				String theName = rs.getString("name");
 				Double price = rs.getDouble("price");
 				int quantity = rs.getInt("quantity");
+				String imageID = rs.getString("imageID");
 				
 				String result = new String(
-						theName + "\t" + category + "\t" + price + "\t" + quantity + "\t" + description + "\t" + id);
+						theName + "\t" + category + "\t" + price + "\t" + quantity + "\t" + description + "\t" + id+ "\t" + imageID);
 
 				Item item = new Item();
 				item.setId(id);
@@ -168,6 +348,9 @@ private ItemImageService imageService;
 				item.setName(theName);
 				item.setPrice(price);
 				item.setQuantity(quantity);
+				//String imageURL = imageBaseURI+imageID;
+				//item.setImage(imageURL);
+				item.setImage(imageID);
 				return item;
 			}
 		} catch (SQLException e) {
@@ -202,6 +385,7 @@ private ItemImageService imageService;
 				String theName = rs.getString("name");
 				Double price = rs.getDouble("price");
 				int quantity = rs.getInt("quantity");
+				String imageID = rs.getString("imageID");
 				
 				String result = new String(
 						theName + "\t" + category + "\t" + price + "\t" + quantity + "\t" + description + "\t" + id);
@@ -213,6 +397,8 @@ private ItemImageService imageService;
 				item.setName(theName);
 				item.setPrice(price);
 				item.setQuantity(quantity);
+				String imageURL = imageBaseURI+imageID;
+				item.setImage(imageURL);
 				//return item;
 				allItems.add(item);
 			}
@@ -228,29 +414,29 @@ private ItemImageService imageService;
 		return allItems;
     }
     
-	//Use this to test the connection
-	@RequestMapping("/api/help")
-	public String sayHello() {
-		return "Helppppppp";
-	}
-    
-    
     
     //deletes a user in repo
     @DeleteMapping(value = "/api/items/{itemID}")
     public boolean removeItem(@PathVariable("itemID") int itemID) throws SQLException {
+    	
       
         
       	loadDriver(dbdriver);
 
   		Connection con = getConnection();
+  		
+  		Item item = getItem(itemID);
+  		String imageID = item.getImage();
 
   		java.sql.Statement stmt = null;
-  		String query = "delete from item where id = "+itemID+" ";
+  		String query = "delete from userdb.item where id = "+itemID+" ";
 
   		try {
   			stmt = con.createStatement();
   			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+  			
+  			deleteImageFromS3(imageID); //calls function to delete from S3
+  			
   			return true;
   		} catch (SQLException e) {
   			System.out.println("SQL Exception");
@@ -261,6 +447,19 @@ private ItemImageService imageService;
   		}
   		return false;
     }
+    
+    
+	
+	//~~~~~~RANDOM TEST FUNCTIONS~~~~~~//
+
+    
+    
+	//Use this to test the connection
+	@RequestMapping("/api/help")
+	public String sayHello() {
+		return "Helppppppp";
+	}
+    
     
     
     //testing request body

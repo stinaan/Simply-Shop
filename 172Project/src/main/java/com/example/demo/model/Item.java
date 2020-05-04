@@ -37,11 +37,11 @@ public class Item {
     @Column(name = "category", nullable = false)
     private String category;
 	
-    @OneToOne(cascade = {CascadeType.ALL})
-    private ItemImage itemImage;
+    @Column(name = "imageID", nullable = false)
+    private String imageID;
 	
 
-	public Item(String name, String category, Double price, Integer quantity, String description, Integer id, ItemImage image) {
+	public Item(String name, String category, Double price, Integer quantity, String description, Integer id, String imageID) {
 		super();
 		this.name = name;
 		this.category = category;
@@ -49,7 +49,7 @@ public class Item {
 		this.quantity = quantity;
 		this.description = description;
 		this.itemID = id;
-		this.itemImage = image;
+		this.imageID = imageID;
 	}
 	public Item(String name, String category, Double price, Integer quantity, String description, Integer id) {
 		super();
@@ -114,12 +114,12 @@ public class Item {
 	}
 	
 	//added this for image for item -Christina
-    public ItemImage getImage() {
-        return itemImage;
+    public String getImage() {
+        return imageID;
     }
  
-    public void setImage(ItemImage image) {
-        this.itemImage = image;
+    public void setImage(String imageID) {
+        this.imageID = imageID;
     }
 	
 
