@@ -225,7 +225,7 @@ public class ItemController {
 		String path = iFile.getPath();
 		testImageUpload(fileName, path);
 
-		String query = "insert into userdb.item (name, category, price, quantity, description, image) values (" + name
+		String query = "insert into userdb.item (name, category, price, quantity, description, imageID) values (" + name
 				+ "," + category + "," + price + "," + quantity + "," + description + "," + fileName + ") ";
 
 		try {
