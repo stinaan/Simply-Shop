@@ -199,9 +199,10 @@ public class ItemController {
 
 	// ~~~~~~ITEMS FUNCTIONS~~~~~~//
 	@CrossOrigin(origins = "http://localhost:3000")
-	@RequestMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
+	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public ModelAndView createItem(
+	public Item createItem(
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "category", required = true) String category,
 			@RequestParam(value = "price", required = true) double price,
@@ -233,12 +234,6 @@ public class ItemController {
 		 * function
 		 * 
 		 */
-/*
-		File iFile = (File) imageFile;
-		String fileName = iFile.getName();
-		String path = iFile.getPath();
-		*/
-		
 		
 		File file = convertMultiPartToFile(imageFile);
 		String path = file.getPath();
@@ -254,7 +249,7 @@ public class ItemController {
 			boolean rs = stmt.execute(query);
 
 			// model.addAttribute("attribute", "redirectWithRedirectPrefix");
-			return new ModelAndView("redirect:/api/items/" + itemID, model);
+			return item;
 			//return "it works!";
 
 		} catch (SQLException e) {
@@ -269,8 +264,9 @@ public class ItemController {
 	}
 	@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
+	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public ModelAndView editItem( 
+	public Item editItem( 
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "category", required = true) String category,
 			@RequestParam(value = "price", required = true) double price,
@@ -308,7 +304,7 @@ public class ItemController {
 			String query1 = "select * from userdb.item where name = '" + item.getName() + "' && price = " + item.getPrice();
 
 			ModelMap model = new ModelMap();
-			return new ModelAndView("redirect:/api/items/" + itemID, model);
+			return item;
 			
 		} catch (SQLException e) {
 			System.out.println("SQL Exception");
@@ -320,7 +316,7 @@ public class ItemController {
 		return null;
 	}
 
-	// finds the user in repo
+	//gets item from rds
 @CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping(value = "/api/items/{itemID}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
@@ -335,7 +331,7 @@ public class ItemController {
 
 		try {
 			stmt = con.createStatement();
-			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
 				int id = rs.getInt("id");
 				String category = rs.getString("category");
@@ -428,6 +424,7 @@ public class ItemController {
 	// deletes a user in repo
 	@CrossOrigin(origins = "http://localhost:3000")
 	@DeleteMapping(value = "/api/items/{itemID}")
+	@ResponseStatus(HttpStatus.OK)
 	public boolean removeItem(@PathVariable("itemID") int itemID) throws SQLException {
 
 		loadDriver(dbdriver);
@@ -458,6 +455,9 @@ public class ItemController {
 		}
 		return false;
 	}
+	
+	
+	
 
 	// ~~~~~~RANDOM TEST FUNCTIONS~~~~~~//
 
@@ -550,7 +550,7 @@ public class ItemController {
 		item.setQuantity(1);
 		item.setDescription("test2");
 		item.setImage("testPhoto.png");
-		String fileName = "egege";
+		String fileName = "testPhoto.png";
 		
 		
 		
@@ -602,6 +602,56 @@ public class ItemController {
 			}
 		}
 		//return query+" does not work";
+		return null;
+	}
+	
+	
+	@GetMapping(value = "/api/test/items/{itemID}")
+	public Item getItemTest(@PathVariable("itemID") int itemID) throws SQLException {
+
+		loadDriver(dbdriver);
+
+		Connection con = getConnection();
+
+		java.sql.Statement stmt = null;
+		String query = "select * from userdb.item where id = " + itemID + " ";
+
+		try {
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String category = rs.getString("category");
+				String description = rs.getString("description");
+				String theName = rs.getString("name");
+				Double price = rs.getDouble("price");
+				int quantity = rs.getInt("quantity");
+				String imageID = rs.getString("imageID");
+
+				String result = new String(theName + "\t" + category + "\t" + price + "\t" + quantity + "\t"
+						+ description + "\t" + id + "\t" + imageID);
+
+				Item item = new Item();
+				item.setId(id);
+				item.setCategory(category);
+				item.setDescription(description);
+				item.setName(theName);
+				item.setPrice(price);
+				item.setQuantity(quantity);
+				//String imageURL = imageBaseURI + imageID;
+				String imageURL = getImageFromS3(imageID);
+				item.setImageURL(imageURL);
+				item.setImage(imageID);
+
+				return item;
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL Exception");
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
 		return null;
 	}
 	
