@@ -240,7 +240,7 @@ public class ItemController {
 		String fileName = file.getName();
 		uploadImageToS3(fileName, path);
 		item.setImage(fileName);
-		item.setImage(imageBaseURI+fileName);
+		item.setImageURL(imageBaseURI+fileName);
 
 		String query = "insert into userdb.item (name, category, price, quantity, description, imageID) values (\"" + item.getName() + "\",\"" + item.getCategory() + "\",\"" + item.getPrice().toString() + "\",\"" + item.getQuantity().toString() + "\",\"" + item.getDescription() + "\",\"" + fileName + "\") ";
 		ModelMap model = new ModelMap();
