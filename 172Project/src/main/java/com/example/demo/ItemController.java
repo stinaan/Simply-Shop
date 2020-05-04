@@ -191,7 +191,8 @@ public class ItemController {
 
 	@PostMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public ModelAndView createItem(ModelMap model, @RequestParam(value = "name", required = true) String name,
+	public ModelAndView createItem(
+			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "category", required = true) String category,
 			@RequestParam(value = "price", required = true) double price,
 			@RequestParam(value = "quantity", required = true) int quantity,
@@ -227,7 +228,7 @@ public class ItemController {
 
 		String query = "insert into userdb.item (name, category, price, quantity, description, imageID) values (" + name
 				+ "," + category + "," + price + "," + quantity + "," + description + "," + fileName + ") ";
-
+		ModelMap model = new ModelMap();
 		try {
 			stmt = con.createStatement();
 			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
@@ -245,7 +246,7 @@ public class ItemController {
 		return null;
 	}
 
-	@RequestMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
+@RequestMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public ModelAndView editItem(ModelMap model, @RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "category", required = true) String category,
@@ -464,4 +465,50 @@ public class ItemController {
 		}
 
 	}
+	
+	
+	
+	@RequestMapping(value = "/api/test/edit/{itemID}", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String editItemTest(ModelMap model, @PathVariable("itemID") int itemID)
+			throws Exception {
+		Item item = getItem(1);
+		item.setName("test1");
+		item.setCategory("test1");
+		item.setPrice(1.00);
+		item.setQuantity(1);
+		item.setDescription("test1");
+		item.setImage("testPhoto.png");
+		// item.setImage(imageID);
+
+		loadDriver(dbdriver);
+
+		Connection con = getConnection();
+
+		java.sql.Statement stmt = null;
+		String query = "UPDATE userdb.item SET name = "+item.getName()+", category = "+item.getCategory()+", description = "+item.getDescription()+", price = "+item.getPrice().toString()+", quantity = "+item.getQuantity().toString()+" WHERE id = "+itemID;
+
+		try {
+			stmt = con.createStatement();
+			int rs = stmt.executeUpdate(query);
+			String query1 = "select * from userdb.item where name = '" + item.getName() + "' && price = " + item.getPrice();
+			return "works!";
+		} catch (SQLException e) {
+			System.out.println("SQL Exception");
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+		//return new ModelAndView("redirect:/api/help/", model);
+		return query+": does not work";
+	}
+
+	
+	
+	
+	
+	
+	
+	
 }
