@@ -91,6 +91,15 @@ public class ItemController {
 
 		return con;
 	}
+	
+	//code from https://medium.com/oril/uploading-files-to-aws-s3-bucket-using-spring-boot-483fcb6f8646
+	private File convertMultiPartToFile(MultipartFile file) throws IOException {
+	    File convFile = new File(file.getOriginalFilename());
+	    FileOutputStream fos = new FileOutputStream(convFile);
+	    fos.write(file.getBytes());
+	    fos.close();
+	    return convFile;
+	}
 
 //~~~~~~S3 FUNCTIONS~~~~~~//
 	AWSCredentials credentials = new BasicAWSCredentials("AKIAVRMN5GGM6TJ5SKOL",
@@ -190,7 +199,7 @@ public class ItemController {
 
 	// ~~~~~~ITEMS FUNCTIONS~~~~~~//
 
-	@PostMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public ModelAndView createItem(
 			@RequestParam(value = "name", required = true) String name,
@@ -198,12 +207,8 @@ public class ItemController {
 			@RequestParam(value = "price", required = true) double price,
 			@RequestParam(value = "quantity", required = true) int quantity,
 			@RequestParam(value = "description", required = true) String description,
-			// @RequestParam(value="id", required=true) Integer itemID,
-			@RequestParam(value = "imageID", required = true) MultipartFile imageFile) throws Exception {
-		// ItemImage itemImage = imageService.addImage(image);
-		// Item item = new Item(name, category, price, quantity, description, itemID,
-		// itemImage);
-		// itemRepo.save(item);
+			@RequestParam(value = "image", required = true) MultipartFile imageFile) throws Exception {
+		
 		Item item = new Item();
 		item.setName(name);
 		item.setCategory(category);
@@ -218,7 +223,7 @@ public class ItemController {
 
 		java.sql.Statement stmt = null;
 
-		// TODO:
+		//
 		/*
 		 * convert imageFile into a File (unless don't need to) should be able to
 		 * retrieve both the file name AND the path (user/image/photo.png, etc) call
@@ -272,7 +277,7 @@ public class ItemController {
 			@RequestParam(value = "quantity", required = true) int quantity,
 			@RequestParam(value = "description", required = true) String description,
 			@PathVariable("itemID") int itemID, 
-			@RequestParam(value = "imageID", required = true) MultipartFile imageFile)
+			@RequestParam(value = "image", required = true) MultipartFile imageFile)
 			throws Exception {
 		Item item = getItem(itemID);
 		item.setName(name);
@@ -434,11 +439,13 @@ public class ItemController {
 
 		try {
 			stmt = con.createStatement();
-			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+			boolean rs = stmt.execute(query);
 
+			if (rs == true) { //the deletion from rds works
 			deleteImageFromS3(imageID); // calls function to delete from S3
+			}
 
-			return true;
+			return rs;
 		} catch (SQLException e) {
 			System.out.println("SQL Exception");
 		} finally {
@@ -522,20 +529,13 @@ public class ItemController {
 		return null;
 	}
 
-	//code from https://medium.com/oril/uploading-files-to-aws-s3-bucket-using-spring-boot-483fcb6f8646
-	private File convertMultiPartToFile(MultipartFile file) throws IOException {
-	    File convFile = new File(file.getOriginalFilename());
-	    FileOutputStream fos = new FileOutputStream(convFile);
-	    fos.write(file.getBytes());
-	    fos.close();
-	    return convFile;
-	}
+
 	
 
 	
 	@RequestMapping(value = "/api/test/createitem", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public String createItemTest() throws Exception {
+	public ModelAndView createItemTest() throws Exception {
 		// ItemImage itemImage = imageService.addImage(image);
 		// Item item = new Item(name, category, price, quantity, description, itemID,
 		// itemImage);
@@ -588,8 +588,8 @@ public class ItemController {
 			boolean rs = stmt.execute(query);
 
 			// model.addAttribute("attribute", "redirectWithRedirectPrefix");
-			//return new ModelAndView("redirect:/api/items/" + itemID, model);
-			return "it works!";
+			return new ModelAndView("redirect:/api/items/" + itemID, model);
+			//return "it works!";
 
 		} catch (SQLException e) {
 			System.out.println("SQL Exception");
@@ -598,7 +598,8 @@ public class ItemController {
 				stmt.close();
 			}
 		}
-		return query+" does not work";
+		//return query+" does not work";
+		return null;
 	}
 	
 	
