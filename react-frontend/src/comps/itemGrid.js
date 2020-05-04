@@ -42,7 +42,7 @@ const ItemGridcomp = () => {
     },[]);
 
     return (
-        <div className="island">
+        <div id="itemContainer" className="island">
             {allItemsHtml}
         </div>
     );
