@@ -199,11 +199,18 @@ public class ItemController {
 			@RequestParam(value = "quantity", required = true) int quantity,
 			@RequestParam(value = "description", required = true) String description,
 			// @RequestParam(value="id", required=true) Integer itemID,
-			@RequestParam(value = "image", required = true) MultipartFile imageFile) throws Exception {
+			@RequestParam(value = "imageID", required = true) MultipartFile imageFile) throws Exception {
 		// ItemImage itemImage = imageService.addImage(image);
 		// Item item = new Item(name, category, price, quantity, description, itemID,
 		// itemImage);
 		// itemRepo.save(item);
+		Item item = new Item();
+		item.setName(name);
+		item.setCategory(category);
+		item.setPrice(price);
+		item.setQuantity(quantity);
+		item.setDescription(description);
+
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
@@ -221,21 +228,29 @@ public class ItemController {
 		 * function
 		 * 
 		 */
-
+/*
 		File iFile = (File) imageFile;
 		String fileName = iFile.getName();
 		String path = iFile.getPath();
+		*/
+		
+		
+		File file = convertMultiPartToFile(imageFile);
+		String path = file.getPath();
+		String fileName = file.getName();
 		uploadImageToS3(fileName, path);
+		item.setImage(fileName);
+		item.setImage(imageBaseURI+fileName);
 
-		String query = "insert into userdb.item (name, category, price, quantity, description, imageID) values (" + name
-				+ "," + category + "," + price + "," + quantity + "," + description + "," + fileName + ") ";
+		String query = "insert into userdb.item (name, category, price, quantity, description, imageID) values (\"" + item.getName() + "\",\"" + item.getCategory() + "\",\"" + item.getPrice().toString() + "\",\"" + item.getQuantity().toString() + "\",\"" + item.getDescription() + "\",\"" + fileName + "\") ";
 		ModelMap model = new ModelMap();
 		try {
 			stmt = con.createStatement();
-			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+			boolean rs = stmt.execute(query);
 
 			// model.addAttribute("attribute", "redirectWithRedirectPrefix");
 			return new ModelAndView("redirect:/api/items/" + itemID, model);
+			//return "it works!";
 
 		} catch (SQLException e) {
 			System.out.println("SQL Exception");
@@ -244,6 +259,7 @@ public class ItemController {
 				stmt.close();
 			}
 		}
+		//return query+" does not work";
 		return null;
 	}
 
@@ -569,7 +585,7 @@ public class ItemController {
 		ModelMap model = new ModelMap();
 		try {
 			stmt = con.createStatement();
-			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+			boolean rs = stmt.execute(query);
 
 			// model.addAttribute("attribute", "redirectWithRedirectPrefix");
 			//return new ModelAndView("redirect:/api/items/" + itemID, model);
