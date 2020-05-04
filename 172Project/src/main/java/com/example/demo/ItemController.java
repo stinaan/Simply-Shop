@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -112,7 +113,7 @@ public class ItemController {
 	// test upload
 	// @RequestMapping(value = "/api/testbucket/upload") -readd this to test
 	// manually
-	public String testImageUpload(String imageName, String path) {
+	public String uploadImageToS3(String imageName, String path) {
 		/*
 		 * @PostMapping("/upload") public String uploadFile(@RequestPart(value = "file")
 		 * MultipartFile file) { return this.amazonClient.upload(file); }
@@ -224,7 +225,7 @@ public class ItemController {
 		File iFile = (File) imageFile;
 		String fileName = iFile.getName();
 		String path = iFile.getPath();
-		testImageUpload(fileName, path);
+		uploadImageToS3(fileName, path);
 
 		String query = "insert into userdb.item (name, category, price, quantity, description, imageID) values (" + name
 				+ "," + category + "," + price + "," + quantity + "," + description + "," + fileName + ") ";
@@ -248,12 +249,14 @@ public class ItemController {
 
 @RequestMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public ModelAndView editItem(ModelMap model, @RequestParam(value = "name", required = true) String name,
+	public ModelAndView editItem( 
+			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "category", required = true) String category,
 			@RequestParam(value = "price", required = true) double price,
 			@RequestParam(value = "quantity", required = true) int quantity,
 			@RequestParam(value = "description", required = true) String description,
-			@PathVariable("itemID") int itemID, @RequestParam(value = "imageID", required = true) MultipartFile imageID)
+			@PathVariable("itemID") int itemID, 
+			@RequestParam(value = "imageID", required = true) MultipartFile imageFile)
 			throws Exception {
 		Item item = getItem(itemID);
 		item.setName(name);
@@ -261,34 +264,31 @@ public class ItemController {
 		item.setPrice(price);
 		item.setQuantity(quantity);
 		item.setDescription(description);
+		
 		// item.setImage(imageID);
+		
+		File file = convertMultiPartToFile(imageFile);
+		String path = file.getPath();
+		String fileName = file.getName();
+		uploadImageToS3(fileName, path);
+		
+		item.setImage(fileName);
 
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
 
 		java.sql.Statement stmt = null;
-		String query = "UPDATE userdb.item SET name = " + name + ", category = " + category + ", description = "
-				+ description + ", price = " + price + ", quantity = " + quantity + " WHERE id = " + itemID + " ";
+		String query = "UPDATE userdb.item SET name = \""+item.getName()+"\", category = \""+item.getCategory()+"\", description = \""+item.getDescription()+"\", price = \""+item.getPrice().toString()+"\", quantity = \""+item.getQuantity().toString()+"\",imageID = \""+fileName+"\" WHERE id = "+itemID;
 
 		try {
 			stmt = con.createStatement();
-			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
-			String query1 = "select * from userdb.item where name = '" + name + "' && price = " + price;
-			try {
-				// stmt = con.createStatement();
-				ResultSet rs1 = ((java.sql.Statement) stmt).executeQuery(query1);
+			int rs = stmt.executeUpdate(query);
+			String query1 = "select * from userdb.item where name = '" + item.getName() + "' && price = " + item.getPrice();
 
-				// model.addAttribute("attribute", "redirectWithRedirectPrefix");
-				return new ModelAndView("redirect:/api/items/" + itemID, model);
-
-			} catch (SQLException e) {
-				System.out.println("SQL Exception");
-			}
-
-			// model.addAttribute("attribute", "redirectWithRedirectPrefix");
+			ModelMap model = new ModelMap();
 			return new ModelAndView("redirect:/api/items/" + itemID, model);
-
+			
 		} catch (SQLException e) {
 			System.out.println("SQL Exception");
 		} finally {
@@ -470,14 +470,14 @@ public class ItemController {
 	
 	@RequestMapping(value = "/api/test/edit/{itemID}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public String editItemTest(ModelMap model, @PathVariable("itemID") int itemID)
+	public ModelAndView editItemTest(@PathVariable("itemID") int itemID)
 			throws Exception {
 		Item item = getItem(1);
-		item.setName("test1");
-		item.setCategory("test1");
+		item.setName("test2");
+		item.setCategory("test2");
 		item.setPrice(1.00);
 		item.setQuantity(1);
-		item.setDescription("test1");
+		item.setDescription("test2");
 		item.setImage("testPhoto.png");
 		// item.setImage(imageID);
 
@@ -486,13 +486,14 @@ public class ItemController {
 		Connection con = getConnection();
 
 		java.sql.Statement stmt = null;
-		String query = "UPDATE userdb.item SET name = "+item.getName()+", category = "+item.getCategory()+", description = "+item.getDescription()+", price = "+item.getPrice().toString()+", quantity = "+item.getQuantity().toString()+" WHERE id = "+itemID;
+		String query = "UPDATE userdb.item SET name = \""+item.getName()+"\", category = \""+item.getCategory()+"\", description = \""+item.getDescription()+"\", price = \""+item.getPrice().toString()+"\", quantity = \""+item.getQuantity().toString()+"\" WHERE id = "+itemID;
 
 		try {
 			stmt = con.createStatement();
 			int rs = stmt.executeUpdate(query);
 			String query1 = "select * from userdb.item where name = '" + item.getName() + "' && price = " + item.getPrice();
-			return "works!";
+			ModelMap model = new ModelMap();
+			return new ModelAndView("redirect:/api/items/" + itemID, model);
 		} catch (SQLException e) {
 			System.out.println("SQL Exception");
 		} finally {
@@ -501,11 +502,88 @@ public class ItemController {
 			}
 		}
 		//return new ModelAndView("redirect:/api/help/", model);
-		return query+": does not work";
+		//return query+": does not work";
+		return null;
 	}
 
+	//code from https://medium.com/oril/uploading-files-to-aws-s3-bucket-using-spring-boot-483fcb6f8646
+	private File convertMultiPartToFile(MultipartFile file) throws IOException {
+	    File convFile = new File(file.getOriginalFilename());
+	    FileOutputStream fos = new FileOutputStream(convFile);
+	    fos.write(file.getBytes());
+	    fos.close();
+	    return convFile;
+	}
 	
+
 	
+	@RequestMapping(value = "/api/test/createitem", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String createItemTest() throws Exception {
+		// ItemImage itemImage = imageService.addImage(image);
+		// Item item = new Item(name, category, price, quantity, description, itemID,
+		// itemImage);
+		// itemRepo.save(item);
+		Item item = getItem(1);
+		item.setName("test2");
+		item.setCategory("test2");
+		item.setPrice(1.00);
+		item.setQuantity(1);
+		item.setDescription("test2");
+		item.setImage("testPhoto.png");
+		String fileName = "egege";
+		
+		
+		
+		
+		loadDriver(dbdriver);
+
+		Connection con = getConnection();
+		int itemID = 0;
+
+		java.sql.Statement stmt = null;
+
+		// TODO:
+		/*
+		 * convert imageFile into a File (unless don't need to) should be able to
+		 * retrieve both the file name AND the path (user/image/photo.png, etc) call
+		 * testImageUpload(String imageName, String path) to upload to s3 then add
+		 * imageName to rds (s3 key is formatted "/images/photo.png" but should only
+		 * save "photo.png" to rds, don't save "/images" or wont work for the other
+		 * function
+		 * 
+		 */
+/*
+		File iFile = (File) imageFile;
+		String fileName = iFile.getName();
+		String path = iFile.getPath();
+		*/
+		
+		/*
+		File file = convertMultiPartToFile(imageFile);
+		String path = file.getPath();
+		String fileName = file.getName();
+		uploadImageToS3(fileName, path);*/
+
+		String query = "insert into userdb.item (name, category, price, quantity, description, imageID) values (\"" + item.getName() + "\",\"" + item.getCategory() + "\",\"" + item.getPrice().toString() + "\",\"" + item.getQuantity().toString() + "\",\"" + item.getDescription() + "\",\"" + fileName + "\") ";
+		ModelMap model = new ModelMap();
+		try {
+			stmt = con.createStatement();
+			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+
+			// model.addAttribute("attribute", "redirectWithRedirectPrefix");
+			//return new ModelAndView("redirect:/api/items/" + itemID, model);
+			return "it works!";
+
+		} catch (SQLException e) {
+			System.out.println("SQL Exception");
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+		return query+" does not work";
+	}
 	
 	
 	
