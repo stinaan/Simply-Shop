@@ -151,8 +151,8 @@ public class ItemController {
 	}
 
 	// test image retrieving
-	// @RequestMapping(value = "/api/testbucket/images/{imageID}")
-	public String testImageRetrieve(String imageID) {// @PathVariable("imageID") String imageID) {
+	 //@RequestMapping(value = "/api/testbucket/images/{imageID}")
+	public String getImageFromS3(String imageID) {//@PathVariable("imageID") String imageID) {
 		String photoID = "";
 
 		///////// ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -173,8 +173,8 @@ public class ItemController {
 			S3Object object = s3client.getObject(bucketName, "images/" + imageID + "");
 			if (object.getKey() != null) {
 				// return object.getKey();
-				return "<html><img src = \"https://cmpe172project.s3-us-west-1.amazonaws.com/images/" + imageID
-						+ "\"></html>";
+				//return object.getRedirectLocation();
+				return "https://cmpe172project.s3-us-west-1.amazonaws.com/images/" + imageID;
 
 			}
 			return imageID + " imageID not found in bucket";
@@ -332,7 +332,8 @@ public class ItemController {
 				item.setName(theName);
 				item.setPrice(price);
 				item.setQuantity(quantity);
-				String imageURL = imageBaseURI + imageID;
+				//String imageURL = imageBaseURI + imageID;
+				String imageURL = getImageFromS3(imageID);
 				item.setImageURL(imageURL);
 				item.setImage(imageID);
 
