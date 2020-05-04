@@ -348,9 +348,10 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 				item.setName(theName);
 				item.setPrice(price);
 				item.setQuantity(quantity);
-				//String imageURL = imageBaseURI+imageID;
-				//item.setImage(imageURL);
+				String imageURL = imageBaseURI+imageID;
+				item.setImageURL(imageURL);
 				item.setImage(imageID);
+				
 				return item;
 			}
 		} catch (SQLException e) {
@@ -398,7 +399,8 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 				item.setPrice(price);
 				item.setQuantity(quantity);
 				String imageURL = imageBaseURI+imageID;
-				item.setImage(imageURL);
+				item.setImageURL(imageURL);
+				item.setImage(imageID);
 				//return item;
 				allItems.add(item);
 			}

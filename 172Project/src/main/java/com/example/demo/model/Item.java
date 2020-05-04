@@ -39,6 +39,8 @@ public class Item {
 	
     @Column(name = "imageID", nullable = false)
     private String imageID;
+    
+    private String imageURL;
 	
 
 	public Item(String name, String category, Double price, Integer quantity, String description, Integer id, String imageID) {
@@ -120,6 +122,14 @@ public class Item {
  
     public void setImage(String imageID) {
         this.imageID = imageID;
+    }
+    
+    public String getImageURL() {
+        return imageURL;
+    }
+    
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 	
 
