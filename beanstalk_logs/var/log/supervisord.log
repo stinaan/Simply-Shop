@@ -1,0 +1,37 @@
+2020-05-04 19:02:16,246 CRIT Supervisor running as root (no user in config file)
+2020-05-04 19:02:16,246 WARN Included extra file "/etc/supervisor/conf.d/application.conf" during parsing
+2020-05-04 19:02:16,246 WARN Included extra file "/etc/supervisor/conf.d/containerlistener.conf" during parsing
+2020-05-04 19:02:16,292 INFO RPC interface 'supervisor' initialized
+2020-05-04 19:02:16,292 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2020-05-04 19:02:16,292 INFO supervisord started with pid 3213
+2020-05-04 19:02:17,295 INFO spawned: 'supervisor_listener' with pid 3284
+2020-05-04 19:02:17,296 INFO spawned: 'application-web-1' with pid 3285
+2020-05-04 19:02:17,578 INFO exited: application-web-1 (exit status 1; not expected)
+2020-05-04 19:02:18,630 INFO success: supervisor_listener entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2020-05-04 19:02:18,632 INFO spawned: 'application-web-1' with pid 3306
+2020-05-04 19:02:18,955 INFO exited: application-web-1 (exit status 1; not expected)
+2020-05-04 19:02:21,046 INFO spawned: 'application-web-1' with pid 3341
+2020-05-04 19:02:21,129 INFO exited: application-web-1 (exit status 1; not expected)
+2020-05-04 19:02:24,183 INFO spawned: 'application-web-1' with pid 3356
+2020-05-04 19:02:24,267 INFO exited: application-web-1 (exit status 1; not expected)
+2020-05-04 19:02:24,317 INFO gave up: application-web-1 entered FATAL state, too many start retries too quickly
+2020-05-04 19:06:02,664 INFO waiting for supervisor_listener to stop
+2020-05-04 19:06:02,666 INFO stopped: supervisor_listener (terminated by SIGQUIT)
+2020-05-04 19:06:03,681 WARN received SIGTERM indicating exit request
+2020-05-04 19:06:04,668 CRIT Supervisor running as root (no user in config file)
+2020-05-04 19:06:04,669 WARN Included extra file "/etc/supervisor/conf.d/application.conf" during parsing
+2020-05-04 19:06:04,669 WARN Included extra file "/etc/supervisor/conf.d/containerlistener.conf" during parsing
+2020-05-04 19:06:04,720 INFO RPC interface 'supervisor' initialized
+2020-05-04 19:06:04,720 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2020-05-04 19:06:04,720 INFO supervisord started with pid 3634
+2020-05-04 19:06:05,723 INFO spawned: 'supervisor_listener' with pid 3705
+2020-05-04 19:06:05,724 INFO spawned: 'application-web-1' with pid 3706
+2020-05-04 19:06:05,892 INFO exited: application-web-1 (exit status 1; not expected)
+2020-05-04 19:06:07,030 INFO success: supervisor_listener entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2020-05-04 19:06:07,031 INFO spawned: 'application-web-1' with pid 3723
+2020-05-04 19:06:07,372 INFO exited: application-web-1 (exit status 1; not expected)
+2020-05-04 19:06:09,472 INFO spawned: 'application-web-1' with pid 3762
+2020-05-04 19:06:09,556 INFO exited: application-web-1 (exit status 1; not expected)
+2020-05-04 19:06:12,611 INFO spawned: 'application-web-1' with pid 3777
+2020-05-04 19:06:12,694 INFO exited: application-web-1 (exit status 1; not expected)
+2020-05-04 19:06:12,744 INFO gave up: application-web-1 entered FATAL state, too many start retries too quickly

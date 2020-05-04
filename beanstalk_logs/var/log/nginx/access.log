@@ -1,0 +1,4 @@
+73.63.218.6 - - [04/May/2020:19:02:19 +0000] "GET / HTTP/1.1" 502 559 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" "-"
+73.63.218.6 - - [04/May/2020:19:02:20 +0000] "GET /favicon.ico HTTP/1.1" 502 559 "http://simplyshopbackend-env.eba-sj7auq5t.us-west-1.elasticbeanstalk.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" "-"
+73.63.218.6 - - [04/May/2020:19:06:03 +0000] "GET / HTTP/1.1" 502 559 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" "-"
+73.63.218.6 - - [04/May/2020:19:06:05 +0000] "GET /favicon.ico HTTP/1.1" 502 559 "http://simplyshopbackend-env.eba-sj7auq5t.us-west-1.elasticbeanstalk.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" "-"

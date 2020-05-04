@@ -1,0 +1,16 @@
+# Logfile created on 2020-05-04 19:01:33 +0000 by logger.rb/47272
+A, [2020-05-04T19:01:33.350937 #2765]   ANY -- : healthd daemon 1.0.3 initialized
+W, [2020-05-04T19:01:33.426641 #2765]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+W, [2020-05-04T19:01:38.426936 #2765]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+W, [2020-05-04T19:01:43.427154 #2765]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+W, [2020-05-04T19:01:48.427436 #2765]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+W, [2020-05-04T19:01:53.851286 #2765]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+W, [2020-05-04T19:01:58.851573 #2765]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+W, [2020-05-04T19:02:03.851894 #2765]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+W, [2020-05-04T19:02:08.852191 #2765]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+W, [2020-05-04T19:02:13.852471 #2765]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+A, [2020-05-04T19:02:19.088751 #3297]   ANY -- : healthd daemon 1.0.3 initialized
+W, [2020-05-04T19:02:19.123216 #3297]  WARN -- : log file "/var/log/nginx/healthd/application.log.2020-05-04-19" does not exist
+A, [2020-05-04T19:06:07.532476 #3718]   ANY -- : healthd daemon 1.0.3 initialized
+W, [2020-05-04T19:06:17.624144 #3718]  WARN -- : discarding statistic item after validation error (Invalid timestamp): {:id=>"0", :namespace=>"application", :timestamp=>1588618940, :data=>"{\"duration\":10,\"latency_histogram\":[[0.0,1]],\"http_counters\":{\"status_502\":1,\"request_count\":1}}"}
+W, [2020-05-04T19:06:17.624282 #3718]  WARN -- : discarding statistic item after validation error (Invalid timestamp): {:id=>"1", :namespace=>"application", :timestamp=>1588618950, :data=>"{\"duration\":10,\"latency_histogram\":[[0.0,1]],\"http_counters\":{\"status_502\":1,\"request_count\":1}}"}
