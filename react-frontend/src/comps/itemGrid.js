@@ -1,9 +1,15 @@
 import React, {useState, useEffect} from 'react';
 
-const ItemGridElem = ({id, name, description, price, quantity}) => {
+/**
+ * Represents a single item in the grid.
+ * Be careful: the names of each parameter must match the name of each property
+ * in the schema belonging to the item. Double check the JSON response to see
+ * what the proper names of each property should be.
+ */
+const ItemGridElem = ({id, name, description, price, quantity, image}) => {
     return (
         <div className="item" key={"item" + id}>
-            <img src="logo192.png"></img>
+            <img src={image}></img>
             <h3>{name}</h3>
             <p>{description}</p>
             <p>${price}</p>

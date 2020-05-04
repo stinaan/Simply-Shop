@@ -25,6 +25,7 @@ import Errorpage from './pages/errorpage'
 import Stylepage from './pages/stylepage'
 import Loginpage from './pages/loginpage'
 import Itemspage from './pages/itemspage';
+import Testpage from './pages/testpage';
 
 import Navcomp from './comps/navigation'
 
@@ -41,6 +42,7 @@ const Basepage = () => {
                     <Route path="/" component={Homepage} exact/>
                     <Route path="/items" component={Itemspage} exact/>
                     <Route path="/stylepage" component={Stylepage}/>
+                    <Route path="/test" component={Testpage}/>
                     <Route path="/react-default" component={DefaultReactpage}/>
                     <Route path="/login" component={Loginpage} exact/>
                     <Route component={Errorpage}/>
