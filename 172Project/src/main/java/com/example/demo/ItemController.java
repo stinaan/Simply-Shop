@@ -198,7 +198,7 @@ public class ItemController {
 	}
 
 	// ~~~~~~ITEMS FUNCTIONS~~~~~~//
-
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RequestMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public ModelAndView createItem(
@@ -267,7 +267,7 @@ public class ItemController {
 		//return query+" does not work";
 		return null;
 	}
-
+	@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/edit/{itemID}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public ModelAndView editItem( 
@@ -321,6 +321,7 @@ public class ItemController {
 	}
 
 	// finds the user in repo
+@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping(value = "/api/items/{itemID}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Item getItem(@PathVariable("itemID") int itemID) throws SQLException {
@@ -372,6 +373,7 @@ public class ItemController {
 	}
 
 	// finds all items in repo
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public List<Item> getItems() throws SQLException {
@@ -424,6 +426,7 @@ public class ItemController {
 	}
 
 	// deletes a user in repo
+	@CrossOrigin(origins = "http://localhost:3000")
 	@DeleteMapping(value = "/api/items/{itemID}")
 	public boolean removeItem(@PathVariable("itemID") int itemID) throws SQLException {
 

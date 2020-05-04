@@ -62,6 +62,7 @@ public class UserController {
 		return con;
 	}
     //finds the user in repo
+	@CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(value = "/api/login", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public boolean checkLogin(@RequestParam(value="username", required=true) String username,
@@ -95,6 +96,7 @@ public class UserController {
 
 	    
 	    //finds the user in repo
+	@CrossOrigin(origins = "http://localhost:3000")
 	    @GetMapping(value = "/api/users/{userID}", produces = "application/json; charset=UTF-8")
 	    @ResponseBody
 	    public User getCustomer(@PathVariable("userID") int userID) throws SQLException {
@@ -138,6 +140,7 @@ public class UserController {
 	  }
 	    
 	    //finds all users in repo
+	@CrossOrigin(origins = "http://localhost:3000")
 	    @GetMapping(value = "/api/users", produces = "application/json; charset=UTF-8")
 	    @ResponseBody
 	    public List<User> getUsers() throws SQLException {
@@ -182,6 +185,7 @@ public class UserController {
 	    }
 	    
 	    //deletes a user in repo
+	@CrossOrigin(origins = "http://localhost:3000")
 	    @DeleteMapping(value = "/api/users/{userID}")
 	    public boolean removeCustomer(@PathVariable("userID") int userID) throws SQLException {
 	        
