@@ -247,3 +247,25 @@ main .island >* {
 main .island >:last-child {
     margin-bottom: 0;
 }
+
+/* items */
+
+#itemContainer {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+#itemContainer .item {
+    margin: var(--xl);
+    flex: 1 0 20%;
+
+    text-align: center;
+}
+
+#itemContainer .item img {
+    width: 100%;
+    overflow: hidden;
+    height: 200px;
+    object-fit: contain;
+}
