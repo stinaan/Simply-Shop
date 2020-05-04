@@ -113,7 +113,7 @@ const Testpage = () => {
                     <label>description</label><textarea name="description"></textarea><br></br>
                     <label>price</label><input name="price"></input><br></br>
                     <label>quantity</label><input name="quantity"></input><br></br>
-                    <label>image</label><input name="imageID" type="file" accept="image/*"></input><br></br>
+                    <label>image</label><input name="image" type="file" accept="image/*"></input><br></br>
                     <button>edit item</button>
                 </form>
             </div>
