@@ -24,9 +24,9 @@ import Homepage from './pages/homepage'
 import Errorpage from './pages/errorpage'
 import Stylepage from './pages/stylepage'
 import Loginpage from './pages/loginpage'
+import Itemspage from './pages/itemspage';
 
 import Navcomp from './comps/navigation'
-import Itemspage from './pages/itemspage';
 
 const Basepage = () => {
     return (

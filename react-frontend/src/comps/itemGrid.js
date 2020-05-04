@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 const ItemGridElem = ({id, name, description, price, quantity}) => {
     return (
         <div className="item" key={"item" + id}>
-            <img src="test_square.png"></img>
+            <img src="logo192.png"></img>
             <h3>{name}</h3>
             <p>{description}</p>
             <p>${price}</p>
@@ -31,7 +31,7 @@ const ItemGridcomp = () => {
             setAllItemsHtml(res);
         })
         .catch((error) => {
-            setAllItemsHtml(<p>{error}</p>);
+        setAllItemsHtml([<p>{error}</p>]);
         });
     },[]);
 
