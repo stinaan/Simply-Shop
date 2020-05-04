@@ -115,8 +115,8 @@ private ItemImageService imageService;
 	}
 	
 	//test upload
-	@RequestMapping(value = "/api/testbucket/upload")
-	public String testImageUpload() {
+	//@RequestMapping(value = "/api/testbucket/upload") -readd this to test manually
+	public String testImageUpload(String imageName, String path) {
 		/*
 		 *     @PostMapping("/upload")
     public String uploadFile(@RequestPart(value = "file") MultipartFile file) {
@@ -131,8 +131,8 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 			 */
 			PutObjectResult por = s3client.putObject(
 					  bucketName, 
-					  "images/testPhoto.png", 
-					  new File("/Users/stina/Pictures/apartment1.jpg")
+					  "images/"+imageName, 
+					  new File(path)
 					);
 			
 			return por.toString();
@@ -141,21 +141,12 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 	}
 	
 	//test delete
-	@RequestMapping(value = "/api/testbucket/delete")
-	public String testImageDelete() {
+	@RequestMapping(value = "/api/testbucket/delete/{imageID}")
+	public String testImageDelete(@PathVariable("imageID") String imageID) {
 		 
 		if(s3client.doesBucketExist(bucketName)) {
-			/*
-			 * Be careful to set the correct content type in the metadata object before directly sending a stream. Unlike file uploads, content types from input streams cannot be automatically determined. If the caller doesn't explicitly set the content type, it will not be set in Amazon S3.
-Content length must be specified before data can be uploaded to Amazon S3. Amazon S3 explicitly requires that the content length be sent in the request headers before it will accept any of the data. If the caller doesn't provide the length, the library must buffer the contents of the input stream in order to calculate it.
-			 */
-			ObjectListing objectListing = s3client.listObjects(bucketName);
-			for(S3ObjectSummary os : objectListing.getObjectSummaries()) {
-				// LOG.info(os.getKey());
-			}
-				
-			//if ()
-			s3client.deleteObject(bucketName,"images/test.png");
+
+			s3client.deleteObject(bucketName,"images/"+imageID+"");
 			
 			return "delete success";
 		}
@@ -184,7 +175,7 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 			S3Object object = s3client.getObject(bucketName, "images/"+imageID+"");
 			if (object.getKey() != null) {
 			//return object.getKey();
-				 return "<html><img src = \"https://cmpe172project.s3-us-west-1.amazonaws.com/images/testPhoto.png\"></html>";
+				 return "<html><img src = \"https://cmpe172project.s3-us-west-1.amazonaws.com/images/"+imageID+"\"></html>";
 
 			}
 			 return imageID+" imageID not found in bucket";
@@ -214,8 +205,8 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
                          @RequestParam(value="quantity", required=true) int quantity,
                          @RequestParam(value="description", required=true) String description,
                          //@RequestParam(value="id", required=true) Integer itemID,
-                         @RequestParam(value="image", required=true) MultipartFile image) throws Exception {
-    ItemImage itemImage = imageService.addImage(image); 
+                         @RequestParam(value="image", required=true) MultipartFile imageFile) throws Exception {
+   // ItemImage itemImage = imageService.addImage(image); 
 	//Item item = new Item(name,  category,  price,  quantity,  description,  itemID, itemImage);
     //itemRepo.save(item);
     loadDriver(dbdriver);
@@ -224,46 +215,24 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 	int itemID = 0;
 
 	java.sql.Statement stmt = null;
-	String query = "insert into userdb.item (name, category, price, quantity, description, image) values ("+name+",+"+category+",+"+price+",+"+quantity+",+"+description+",+1) ";
+	
+	//TODO:
+	/*convert imageFile into a File (unless don't need to)
+	 * should be able to retrieve both the file name AND the path (user/image/photo.png, etc)
+	 * call testImageUpload(String imageName, String path)  to upload to s3
+	 * then add imageName to rds (s3 key is formatted "/images/photo.png" but should only save "photo.png" to rds, don't save "/images" or wont work for the other function
+	 * 
+	 */
+	String query = "insert into userdb.item (name, category, price, quantity, description, image) values ("+name+","+category+","+price+","+quantity+","+description+","+imageFile+") ";
 
 	try {
 		stmt = con.createStatement();
 		ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
-		try {
-			stmt = con.createStatement();
-			String query1 = "select * from userdb.item where name = '"+name+"' && price = "+price;
-			ResultSet rs1 = ((java.sql.Statement) stmt).executeQuery(query1);
-				//stmt = con.createStatement();
-				while (rs1.next()) {
-					int id = rs.getInt("id");
-					String category1 = rs.getString("category");
-					String description1 = rs.getString("description");
-					String theName = rs.getString("name");
-					Double price1 = rs.getDouble("price");
-					int quantity1 = rs.getInt("quantity");
-					
-
-					Item item = new Item();
-					item.setId(id);
-					item.setCategory(category);
-					item.setDescription(description);
-					item.setName(theName);
-					item.setPrice(price);
-					item.setQuantity(quantity);
-					
-					itemID = item.getId();
-					
-				}
+		
 				
 		//model.addAttribute("attribute", "redirectWithRedirectPrefix");
 		return new ModelAndView("redirect:/api/items/"+itemID, model);
-		
-	} catch (SQLException e) {
-		System.out.println("SQL Exception");
-	}
-		//model.addAttribute("attribute", "redirectWithRedirectPrefix");
-		//return new ModelAndView("redirect:/api/items/"+itemID, model);
-		return null;
+	
 		
 	} catch (SQLException e) {
 		System.out.println("SQL Exception");
@@ -287,14 +256,14 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
                          @RequestParam(value="quantity", required=true) int quantity,
                          @RequestParam(value="description", required=true) String description,
                          @PathVariable("itemID") int itemID,
-                         @RequestParam(value="image", required=true) MultipartFile image) throws Exception {
+                         @RequestParam(value="imageID", required=true) String imageID) throws Exception {
     Item item = getItem(itemID);
     item.setName(name);
     item.setCategory(category);
     item.setPrice(price);
     item.setQuantity(quantity);
     item.setDescription(description);
-    item.setImage((ItemImage) image);
+    item.setImage(imageID);
     
     loadDriver(dbdriver);
 
