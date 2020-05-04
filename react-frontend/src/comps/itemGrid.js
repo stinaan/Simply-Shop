@@ -9,7 +9,7 @@ import React, {useState, useEffect} from 'react';
 const ItemGridElem = ({id, name, description, price, quantity, imageURL}) => {
     return (
         <div className="item" key={"item" + id}>
-            <img src={imageURL}></img>
+            <img src={imageURL} alt={"image of " + name}></img>
             <h3>{name}</h3>
             <p>{description}</p>
             <p>${price}</p>

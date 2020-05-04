@@ -1,5 +1,5 @@
 
-import React, {useState, useEffect}  from 'react';
+import React, {useState}  from 'react';
 
 /**
  * Represents the home page of the website.
@@ -7,7 +7,7 @@ import React, {useState, useEffect}  from 'react';
 const Testpage = () => {
     const [message, setMessage] = useState([]);
 
-    // get a single item by id from a form submit event
+    // get a single item by item id from a form submit event
     let getItemById = (event) => {
         event.preventDefault();
         const data = new FormData(event.target);
@@ -24,7 +24,7 @@ const Testpage = () => {
         });
     };
 
-    // delete a single item from the database by id
+    // delete a single item from the database by item id
     // from a form submit event
     let deleteItemByID = (event) => {
         event.preventDefault();
@@ -58,6 +58,7 @@ const Testpage = () => {
         });
     };
 
+    // edit a single item from the database by item id
     let editItemById = (event) => {
         event.preventDefault();
         const data = new FormData(event.target);
@@ -82,7 +83,7 @@ const Testpage = () => {
                 <p>{message}</p>
 
                 <h5>display item data by item ID</h5>
-                <form action="" onSubmit={getItemById}>
+                <form onSubmit={getItemById}>
                     <label>itemId</label><input name="itemId"></input><br></br>
                     <button>display item</button>
                 </form>
@@ -94,18 +95,18 @@ const Testpage = () => {
                 </form>
 
                 <h5>create a new item</h5>
-                <form action="" onSubmit={createItem}>
+                <form onSubmit={createItem} encType="multipart/form-data">
                     <label>category</label><input name="category"></input><br></br>
                     <label>name</label><input name="name"></input><br></br>
                     <label>description</label><textarea name="description"></textarea><br></br>
                     <label>price</label><input name="price"></input><br></br>
                     <label>quantity</label><input name="quantity"></input><br></br>
-                    <label>image</label><input name="imageID" type="file" accept="image/*"></input><br></br>
+                    <label>image</label><input name="image" type="file" accept="image/*"></input><br></br>
                     <button>create item</button>
                 </form>
 
                 <h5>edit an item by item ID</h5>
-                <form action="" onSubmit={editItemById}>
+                <form onSubmit={editItemById} encType="multipart/form-data">
                     <label>itemID</label><input name="itemId"></input><br></br>
                     <label>category</label><input name="category"></input><br></br>
                     <label>name</label><input name="name"></input><br></br>
