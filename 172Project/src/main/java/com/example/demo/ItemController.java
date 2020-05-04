@@ -91,7 +91,7 @@ private ItemImageService imageService;
 	}
 	
 	
-	//s3 bucket
+//~~~~~~S3 FUNCTIONS~~~~~~//
 	AWSCredentials credentials = new BasicAWSCredentials(
 			  "AKIAVRMN5GGM6TJ5SKOL", 
 			  "se6DpesQKZq0My2dzgmFLHyxHeJZNuFgcJWXtbzy"
@@ -154,10 +154,14 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 	}
   
 	//test image retrieving
-	@RequestMapping(value = "/api/testbucket/images/{imageID}")
-	public String testImageRetrieve(@PathVariable("imageID") String imageID) {
+	//@RequestMapping(value = "/api/testbucket/images/{imageID}")
+	public String testImageRetrieve(String imageID) {//@PathVariable("imageID") String imageID) {
 		String photoID = "";
-
+	      
+	    	/////////~~~~~~~~~~~~~~~~~~~~~~~~
+	    	
+	    	
+	    	
 		if(s3client.doesBucketExist(bucketName)) {
 			//ObjectListing objectListing = s3client.listObjects(bucketName);
 			//photoID+="raw imageID:"+imageID+" | ";
@@ -194,7 +198,12 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
   
   
   
-  
+
+	
+	
+	
+	//~~~~~~ITEMS FUNCTIONS~~~~~~//
+
   
   @PostMapping(value = "/api/items", produces = "application/json; charset=UTF-8")
   @ResponseBody
@@ -309,6 +318,10 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
     @ResponseBody
     public Item getItem(@PathVariable("itemID") int itemID) throws SQLException {
       
+    	/////////~~~~~~~~~~~~~~~~~~~~~~~~
+    	
+    	
+    	
     	loadDriver(dbdriver);
 
 		Connection con = getConnection();
@@ -326,9 +339,10 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 				String theName = rs.getString("name");
 				Double price = rs.getDouble("price");
 				int quantity = rs.getInt("quantity");
+				String imageID = rs.getString("imageID");
 				
 				String result = new String(
-						theName + "\t" + category + "\t" + price + "\t" + quantity + "\t" + description + "\t" + id);
+						theName + "\t" + category + "\t" + price + "\t" + quantity + "\t" + description + "\t" + id+ "\t" + imageID);
 
 				Item item = new Item();
 				item.setId(id);
@@ -337,6 +351,7 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 				item.setName(theName);
 				item.setPrice(price);
 				item.setQuantity(quantity);
+				item.setImage(imageID);
 				return item;
 			}
 		} catch (SQLException e) {
@@ -371,6 +386,7 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 				String theName = rs.getString("name");
 				Double price = rs.getDouble("price");
 				int quantity = rs.getInt("quantity");
+				String imageID = rs.getString("imageID");
 				
 				String result = new String(
 						theName + "\t" + category + "\t" + price + "\t" + quantity + "\t" + description + "\t" + id);
@@ -382,6 +398,8 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 				item.setName(theName);
 				item.setPrice(price);
 				item.setQuantity(quantity);
+				String imageURL = imageBaseURI+imageID;
+				item.setImage(imageURL);
 				//return item;
 				allItems.add(item);
 			}
