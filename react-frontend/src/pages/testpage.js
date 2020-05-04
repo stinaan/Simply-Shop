@@ -46,22 +46,31 @@ const Testpage = () => {
     let createItem = (event) => {
         event.preventDefault();
         const data = new FormData(event.target);
-        // runs through all entries, adding each as a key value pair
-
-        let newItem = {};
-        for(let [key, val] of data.entries()) {
-            newItem[key] = val;
-        }
-        console.log(newItem);
 
         fetch('api/items/', {
             method: "POST",
-            body: JSON.stringify(newItem)
+            body: data
         })
         .then(res => res.text())
         .then(setMessage)
         .catch((error) => {
-            setMessage([<p>{error}</p>]);
+            setMessage([<p>{error.toString()}</p>]);
+        });
+    };
+
+    let editItemById = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        const itemId = parseInt(data.get('itemId'));
+
+        fetch('api/edit/' + itemId, {
+            method: "POST",
+            body: data
+        })
+        .then(res => res.text())
+        .then(setMessage)
+        .catch((error) => {
+            setMessage([<p>{error.toString()}</p>]);
         });
     };
 
@@ -91,8 +100,20 @@ const Testpage = () => {
                     <label>description</label><textarea name="description"></textarea><br></br>
                     <label>price</label><input name="price"></input><br></br>
                     <label>quantity</label><input name="quantity"></input><br></br>
-                    <label>image</label><input name="image" type="file" accept="image/*"></input><br></br>
+                    <label>image</label><input name="imageID" type="file" accept="image/*"></input><br></br>
                     <button>create item</button>
+                </form>
+
+                <h5>edit an item by item ID</h5>
+                <form action="" onSubmit={editItemById}>
+                    <label>itemID</label><input name="itemId"></input><br></br>
+                    <label>category</label><input name="category"></input><br></br>
+                    <label>name</label><input name="name"></input><br></br>
+                    <label>description</label><textarea name="description"></textarea><br></br>
+                    <label>price</label><input name="price"></input><br></br>
+                    <label>quantity</label><input name="quantity"></input><br></br>
+                    <label>image</label><input name="imageID" type="file" accept="image/*"></input><br></br>
+                    <button>edit item</button>
                 </form>
             </div>
         </div>
