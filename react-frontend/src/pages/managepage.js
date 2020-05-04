@@ -4,8 +4,8 @@ import React, {useState}  from 'react';
 /**
  * Represents the home page of the website.
  */
-const Testpage = () => {
-    const [message, setMessage] = useState([]);
+const Adminpage = () => {
+    const [message, setMessage] = useState(["Submission result appears here!"]);
 
     // get a single item by item id from a form submit event
     let getItemById = (event) => {
@@ -78,9 +78,9 @@ const Testpage = () => {
     return (
         <div>
             <div className="island">
-                <h1>testing stuff here</h1>
-                <p>an assortment of buttons to test various endpoints</p>
-                <p>{message}</p>
+                <h1>Manage</h1>
+                <p>Use this page to manage Simply Shop's data!</p>
+                <pre><code>{message}</code></pre><br></br><br></br>
 
                 <h5>display item data by item ID</h5>
                 <form onSubmit={getItemById}>
@@ -121,4 +121,4 @@ const Testpage = () => {
     );
 }
 
-export default Testpage;
+export default Adminpage;

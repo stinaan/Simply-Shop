@@ -22,7 +22,7 @@ const ItemGridElem = ({id, name, description, price, quantity, imageURL}) => {
  * Represents an entire island that contains all of the items in the database.
  */
 const ItemGridcomp = () => {
-    const [allItemsHtml, setAllItemsHtml] = useState([]);
+    const [allItemsHtml, setAllItemsHtml] = useState([<h3>Loading items...</h3>]);
 
     useEffect(() => {
         fetch('/api/items', {
