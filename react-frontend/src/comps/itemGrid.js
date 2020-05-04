@@ -6,10 +6,10 @@ import React, {useState, useEffect} from 'react';
  * in the schema belonging to the item. Double check the JSON response to see
  * what the proper names of each property should be.
  */
-const ItemGridElem = ({id, name, description, price, quantity, image}) => {
+const ItemGridElem = ({id, name, description, price, quantity, imageURL}) => {
     return (
         <div className="item" key={"item" + id}>
-            <img src={image}></img>
+            <img src={imageURL}></img>
             <h3>{name}</h3>
             <p>{description}</p>
             <p>${price}</p>

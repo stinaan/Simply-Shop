@@ -46,6 +46,23 @@ const Testpage = () => {
     let createItem = (event) => {
         event.preventDefault();
         const data = new FormData(event.target);
+        // runs through all entries, adding each as a key value pair
+
+        let newItem = {};
+        for(let [key, val] of data.entries()) {
+            newItem[key] = val;
+        }
+        console.log(newItem);
+
+        fetch('api/items/', {
+            method: "POST",
+            body: JSON.stringify(newItem)
+        })
+        .then(res => res.text())
+        .then(setMessage)
+        .catch((error) => {
+            setMessage([<p>{error}</p>]);
+        });
     };
 
     return (
@@ -69,10 +86,12 @@ const Testpage = () => {
 
                 <h5>create a new item</h5>
                 <form action="" onSubmit={createItem}>
+                    <label>category</label><input name="category"></input><br></br>
                     <label>name</label><input name="name"></input><br></br>
                     <label>description</label><textarea name="description"></textarea><br></br>
                     <label>price</label><input name="price"></input><br></br>
                     <label>quantity</label><input name="quantity"></input><br></br>
+                    <label>image</label><input name="image" type="file" accept="image/*"></input><br></br>
                     <button>create item</button>
                 </form>
             </div>
