@@ -141,8 +141,8 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 	}
 	
 	//test delete
-	@RequestMapping(value = "/api/testbucket/delete/{imageID}")
-	public String testImageDelete(@PathVariable("imageID") String imageID) {
+	//@RequestMapping(value = "/api/testbucket/delete/{imageID}")
+	public String deleteImageFromS3(String imageID) {
 		 
 		if(s3client.doesBucketExist(bucketName)) {
 
@@ -265,14 +265,14 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
                          @RequestParam(value="quantity", required=true) int quantity,
                          @RequestParam(value="description", required=true) String description,
                          @PathVariable("itemID") int itemID,
-                         @RequestParam(value="imageID", required=true) String imageID) throws Exception {
+                         @RequestParam(value="imageID", required=true) MultipartFile imageID) throws Exception {
     Item item = getItem(itemID);
     item.setName(name);
     item.setCategory(category);
     item.setPrice(price);
     item.setQuantity(quantity);
     item.setDescription(description);
-    item.setImage(imageID);
+    //item.setImage(imageID);
     
     loadDriver(dbdriver);
 
@@ -318,9 +318,6 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
     @ResponseBody
     public Item getItem(@PathVariable("itemID") int itemID) throws SQLException {
       
-    	/////////~~~~~~~~~~~~~~~~~~~~~~~~
-    	
-    	
     	
     	loadDriver(dbdriver);
 
@@ -351,6 +348,8 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 				item.setName(theName);
 				item.setPrice(price);
 				item.setQuantity(quantity);
+				//String imageURL = imageBaseURI+imageID;
+				//item.setImage(imageURL);
 				item.setImage(imageID);
 				return item;
 			}
@@ -415,22 +414,19 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
 		return allItems;
     }
     
-	//Use this to test the connection
-	@RequestMapping("/api/help")
-	public String sayHello() {
-		return "Helppppppp";
-	}
-    
-    
     
     //deletes a user in repo
     @DeleteMapping(value = "/api/items/{itemID}")
     public boolean removeItem(@PathVariable("itemID") int itemID) throws SQLException {
+    	
       
         
       	loadDriver(dbdriver);
 
   		Connection con = getConnection();
+  		
+  		Item item = getItem(itemID);
+  		String imageID = item.getImage();
 
   		java.sql.Statement stmt = null;
   		String query = "delete from userdb.item where id = "+itemID+" ";
@@ -438,6 +434,9 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
   		try {
   			stmt = con.createStatement();
   			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+  			
+  			deleteImageFromS3(imageID); //calls function to delete from S3
+  			
   			return true;
   		} catch (SQLException e) {
   			System.out.println("SQL Exception");
@@ -448,6 +447,19 @@ Content length must be specified before data can be uploaded to Amazon S3. Amazo
   		}
   		return false;
     }
+    
+    
+	
+	//~~~~~~RANDOM TEST FUNCTIONS~~~~~~//
+
+    
+    
+	//Use this to test the connection
+	@RequestMapping("/api/help")
+	public String sayHello() {
+		return "Helppppppp";
+	}
+    
     
     
     //testing request body
