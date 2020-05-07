@@ -1,6 +1,46 @@
-# 172project
-Simply Shop app for Babu Thomas's 172 class. Richard Pham, Adam Ball, and Christina Nguyen
+# Simply Shop
 
+San Jose State University
+Project submitted for Babu Thomas's Enterprise Software - CMPE172 Spring 2020 class. 
+Created by Richard Pham, Adam Ball, and Christina Nguyen.
+
+### Table of Contents
+
+- [Project Introduction](https://github.com/richardphamsjsu2016/172project#project-introduction)
+- [Screenshots](https://github.com/richardphamsjsu2016/172project#screenshots)
+- [Pre-requisites for Set-up](https://github.com/richardphamsjsu2016/172project#pre-requisites-for-set-up)
+- [How to Run the Project](https://github.com/richardphamsjsu2016/172project#how-to-run-the-project)
+- [Database Schema and Example Queries](https://github.com/richardphamsjsu2016/172project#database-schema-and-example-queries)
+- [Spring Boot API Endpoints](https://github.com/richardphamsjsu2016/172project#spring-boot-api-endpoints)
+- [Frontend to Backend Data Transport](https://github.com/richardphamsjsu2016/172project#frontend-to-backend-data-transport)
+
+### Project Introduction
+
+
+
+### Screenshots
+
+
+
+### Pre-requisites for Set-up
+
+
+
+### How to Run the Project
+
+
+
+### Database Schema and Example Queries
+
+
+
+### Spring Boot API Endpoints
+
+
+
+### Frontend to Backend Data Transport
+
+---
 
 The springboot app can be dockerized. To do so:
 1) Load the project onto Eclipse IDE for Java EE Developers 2020-03.
