@@ -44,17 +44,10 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.demo.model.Item;
-import com.example.demo.model.ItemImage;
-import com.example.repository.ItemRepository;
-import com.example.service.ItemImageService;
 
 @RestController
 public class ItemController {
 
-	@Autowired
-	private ItemRepository itemRepo;
-	@Autowired
-	private ItemImageService imageService;
 
 	@Autowired
 	private JdbcTemplate temp;
@@ -481,16 +474,7 @@ public class ItemController {
 
 	}
 
-	@GetMapping("/api/testtest1/{id}")
-	public ResponseEntity<Item> read(@PathVariable("id") int id) {
-		Item item = itemRepo.getOne(id);
-		if (item == null) {
-			return ResponseEntity.notFound().build();
-		} else {
-			return ResponseEntity.ok(item);
-		}
 
-	}
 	
 	
 	
