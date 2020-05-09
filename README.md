@@ -55,16 +55,9 @@ The Spring Boot app can be dockerized, and it was dockerized before deploying it
 3) Fill in the Dockerfile with the following information:
 
 FROM java:8
-
-WORKDIR /
-
-ADD simplyshop.jar simplyshop.jar
-
-COPY application.properties application.properties
-
 EXPOSE 5000
-
-CMD java -jar simplyshop.jar -Dspring.config.location=application.properties
+ADD target/simplyshop.jar simplyshop.jar
+ENTRYPOINT ["java","-jar","/simplyshop.jar"]
 
 4) Generate jar by right clicking the entire project and clicking Run as “Maven Install."
 5) Run docker.
@@ -72,3 +65,13 @@ CMD java -jar simplyshop.jar -Dspring.config.location=application.properties
 7) Type docker build -t simplyshop.jar .
 8) Type docker image ls
 9) Type docker run -p 9090:5000 simplyshop.jar
+10) On your browser, go to localhost:9090/api/items to see the list of items.
+
+If you are deploying to EC2, use this text for Dockerfile instead:
+
+FROM java:8
+WORKDIR /
+ADD simplyshop.jar simplyshop.jar
+COPY application.properties application.properties
+EXPOSE 5000
+CMD java -jar simplyshop.jar -Dspring.config.location=application.properties
