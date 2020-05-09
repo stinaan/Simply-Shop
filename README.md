@@ -45,6 +45,7 @@ Created by Richard Pham, Adam Ball, and Christina Nguyen.
 The link(s) for the application are attached below:
 
 [Main application, including frontend](http://52.87.248.183:3000/)
+
 [Springboot backend](http://ec2-54-164-61-67.compute-1.amazonaws.com:8080/)
 
 
