@@ -19,7 +19,7 @@ Created by Richard Pham, Adam Ball, and Christina Nguyen.
 
 
 ### Screenshots
-- [Home Page](https://https://github.com/richardphamsjsu2016/172project/blob/master/Screenshots/Home.png)
+- [Home Page](https://github.com/richardphamsjsu2016/172project/blob/master/Screenshots/Home.png)
 - [View Items](https://github.com/richardphamsjsu2016/172project/blob/master/Screenshots/Item_View.png)
 - [Edit, Delete, Create Items](https://github.com/richardphamsjsu2016/172project/blob/master/Screenshots/Manage.png)
 - [Style Reference](https://github.com/richardphamsjsu2016/172project/blob/master/Screenshots/Style_Reference.png)
