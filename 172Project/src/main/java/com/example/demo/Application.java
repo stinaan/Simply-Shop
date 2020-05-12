@@ -17,14 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAutoConfiguration
 @ComponentScan(basePackages="com.example")
 
-public class Application {
-	//Print message when application is run on docker; go help from https://www.youtube.com/watch?v=e3YERpG2rMs at 3:17
-	@GetMapping("/docker")
-	public String getMessage()
-	{
-		return "If you see this, docker worked";
-	}
-	
+public class Application {	
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 		
