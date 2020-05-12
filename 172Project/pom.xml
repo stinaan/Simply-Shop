@@ -76,12 +76,11 @@
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
- 		<dependency>
+   		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.20</version>
-		</dependency>
-		
+		</dependency>		
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
 <!--		<dependency>

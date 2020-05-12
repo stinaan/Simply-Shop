@@ -55,9 +55,9 @@ public class ItemController {
 	// MySQL credentials, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ
 	// at 14:21
 	private String dburl = new String(
-			"jdbc:mysql://cmpe172database.c2yryz8m0mvy.us-east-1.rds.amazonaws.com:3306/userdb");
+			"jdbc:mysql://localhost:3306/userdb");
 	private String dbuname = new String("root");
-	private String dbpassword = new String("thomas172");
+	private String dbpassword = new String("password");
 	private String dbdriver = new String("com.mysql.jdbc.Driver");
 
 	// Load driver from MySQL database, got help from
@@ -85,7 +85,7 @@ public class ItemController {
 		return con;
 	}
 	
-	//code from https://medium.com/oril/uploading-files-to-aws-s3-bucket-using-spring-boot-483fcb6f8646
+	//Convert file for S3 conversion, code from https://medium.com/oril/uploading-files-to-aws-s3-bucket-using-spring-boot-483fcb6f8646
 	private File convertMultiPartToFile(MultipartFile file) throws IOException {
 	    File convFile = new File(file.getOriginalFilename());
 	    FileOutputStream fos = new FileOutputStream(convFile);
@@ -95,13 +95,13 @@ public class ItemController {
 	}
 
 //~~~~~~S3 FUNCTIONS~~~~~~//
-	AWSCredentials credentials = new BasicAWSCredentials("AKIAVRMN5GGM6TJ5SKOL",
-			"se6DpesQKZq0My2dzgmFLHyxHeJZNuFgcJWXtbzy");
+	AWSCredentials credentials = new BasicAWSCredentials("key",
+			"session");
 	AmazonS3 s3client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials))
 			.withRegion(Regions.US_WEST_1).build();
 	String bucketName = "cmpe172project";
 
-	String imageBaseURI = "https://cmpe172project.s3-us-west-1.amazonaws.com/images/";
+	String imageBaseURI = "[this was previously an s3 url]";
 
 	@RequestMapping(value = "/api/testbucket")
 	public String testBucket() {
@@ -116,22 +116,10 @@ public class ItemController {
 	// @RequestMapping(value = "/api/testbucket/upload") -readd this to test
 	// manually
 	public String uploadImageToS3(String imageName, String path) {
-		/*
-		 * @PostMapping("/upload") public String uploadFile(@RequestPart(value = "file")
-		 * MultipartFile file) { return this.amazonClient.upload(file); }
-		 */
 
 		if (s3client.doesBucketExist(bucketName)) {
 			/*
-			 * Be careful to set the correct content type in the metadata object before
-			 * directly sending a stream. Unlike file uploads, content types from input
-			 * streams cannot be automatically determined. If the caller doesn't explicitly
-			 * set the content type, it will not be set in Amazon S3. Content length must be
-			 * specified before data can be uploaded to Amazon S3. Amazon S3 explicitly
-			 * requires that the content length be sent in the request headers before it
-			 * will accept any of the data. If the caller doesn't provide the length, the
-			 * library must buffer the contents of the input stream in order to calculate
-			 * it.
+			 * Check if bucket exists
 			 */
 			PutObjectResult por = s3client.putObject(bucketName, "images/" + imageName, new File(path));
 
@@ -158,33 +146,14 @@ public class ItemController {
 	public String getImageFromS3(String imageID) {//@PathVariable("imageID") String imageID) {
 		String photoID = "";
 
-		///////// ~~~~~~~~~~~~~~~~~~~~~~~~
-
 		if (s3client.doesBucketExist(bucketName)) {
-			// ObjectListing objectListing = s3client.listObjects(bucketName);
-			// photoID+="raw imageID:"+imageID+" | ";
-			/*
-			 * for(S3ObjectSummary os : objectListing.getObjectSummaries()) { //photoID +=
-			 * "raw os value:"+os.getKey()+"  |  "; //String checkID = "images/"+imageID;
-			 * //photoID += "checkingID:"+checkID+"  |  "; if
-			 * (os.getKey().matches("images/"+imageID+"")) { photoID = os.getKey(); //return
-			 * photoID+" found!"; }
-			 * 
-			 * 
-			 * }
-			 */
+
 			S3Object object = s3client.getObject(bucketName, "images/" + imageID + "");
 			if (object.getKey() != null) {
-				// return object.getKey();
-				//return object.getRedirectLocation();
-				return "https://cmpe172project.s3-us-west-1.amazonaws.com/images/" + imageID;
+				return "[this was previously an S3 link for a bucket]" + imageID;
 
 			}
 			return imageID + " imageID not found in bucket";
-
-			// GeneratePresignedUrlRequest request = new
-			// GeneratePresignedUrlRequest("bucketname", "path/to/image");
-			// String url = conn.generatePresignedUrl(request)
 
 		}
 		return "bucket does not exist!";
@@ -240,10 +209,7 @@ public class ItemController {
 		try {
 			stmt = con.createStatement();
 			boolean rs = stmt.execute(query);
-
-			// model.addAttribute("attribute", "redirectWithRedirectPrefix");
 			return item;
-			//return "it works!";
 
 		} catch (SQLException e) {
 			System.out.println("SQL Exception");
@@ -252,7 +218,6 @@ public class ItemController {
 				stmt.close();
 			}
 		}
-		//return query+" does not work";
 		return null;
 	}
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -344,7 +309,6 @@ public class ItemController {
 				item.setName(theName);
 				item.setPrice(price);
 				item.setQuantity(quantity);
-				//String imageURL = imageBaseURI + imageID;
 				String imageURL = getImageFromS3(imageID);
 				item.setImageURL(imageURL);
 				item.setImage(imageID);
@@ -399,7 +363,6 @@ public class ItemController {
 				String imageURL = imageBaseURI + imageID;
 				item.setImageURL(imageURL);
 				item.setImage(imageID);
-				// return item;
 				allItems.add(item);
 			}
 		} catch (SQLException e) {
@@ -409,8 +372,6 @@ public class ItemController {
 				stmt.close();
 			}
 		}
-		// return null;
-		// return (List<Item>) itemRepo.findAll();
 		return allItems;
 	}
 
@@ -449,8 +410,6 @@ public class ItemController {
 		return false;
 	}
 	
-	
-	
 
 	// ~~~~~~RANDOM TEST FUNCTIONS~~~~~~//
 
@@ -473,9 +432,6 @@ public class ItemController {
 		}
 
 	}
-
-
-	
 	
 	
 	@RequestMapping(value = "/api/test/edit/{itemID}", produces = "application/json; charset=UTF-8")
@@ -489,7 +445,6 @@ public class ItemController {
 		item.setQuantity(1);
 		item.setDescription("test2");
 		item.setImage("testPhoto.png");
-		// item.setImage(imageID);
 
 		loadDriver(dbdriver);
 
@@ -511,22 +466,15 @@ public class ItemController {
 				stmt.close();
 			}
 		}
-		//return new ModelAndView("redirect:/api/help/", model);
-		//return query+": does not work";
+
 		return null;
 	}
 
 
 	
-
-	
 	@RequestMapping(value = "/api/test/createitem", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public ModelAndView createItemTest() throws Exception {
-		// ItemImage itemImage = imageService.addImage(image);
-		// Item item = new Item(name, category, price, quantity, description, itemID,
-		// itemImage);
-		// itemRepo.save(item);
 		Item item = getItem(1);
 		item.setName("test2");
 		item.setCategory("test2");
@@ -536,9 +484,6 @@ public class ItemController {
 		item.setImage("testPhoto.png");
 		String fileName = "testPhoto.png";
 		
-		
-		
-		
 		loadDriver(dbdriver);
 
 		Connection con = getConnection();
@@ -546,37 +491,13 @@ public class ItemController {
 
 		java.sql.Statement stmt = null;
 
-		// TODO:
-		/*
-		 * convert imageFile into a File (unless don't need to) should be able to
-		 * retrieve both the file name AND the path (user/image/photo.png, etc) call
-		 * testImageUpload(String imageName, String path) to upload to s3 then add
-		 * imageName to rds (s3 key is formatted "/images/photo.png" but should only
-		 * save "photo.png" to rds, don't save "/images" or wont work for the other
-		 * function
-		 * 
-		 */
-/*
-		File iFile = (File) imageFile;
-		String fileName = iFile.getName();
-		String path = iFile.getPath();
-		*/
-		
-		/*
-		File file = convertMultiPartToFile(imageFile);
-		String path = file.getPath();
-		String fileName = file.getName();
-		uploadImageToS3(fileName, path);*/
-
 		String query = "insert into userdb.item (name, category, price, quantity, description, imageID) values (\"" + item.getName() + "\",\"" + item.getCategory() + "\",\"" + item.getPrice().toString() + "\",\"" + item.getQuantity().toString() + "\",\"" + item.getDescription() + "\",\"" + fileName + "\") ";
 		ModelMap model = new ModelMap();
 		try {
 			stmt = con.createStatement();
 			boolean rs = stmt.execute(query);
 
-			// model.addAttribute("attribute", "redirectWithRedirectPrefix");
 			return new ModelAndView("redirect:/api/items/" + itemID, model);
-			//return "it works!";
 
 		} catch (SQLException e) {
 			System.out.println("SQL Exception");
@@ -585,7 +506,6 @@ public class ItemController {
 				stmt.close();
 			}
 		}
-		//return query+" does not work";
 		return null;
 	}
 	
@@ -622,7 +542,6 @@ public class ItemController {
 				item.setName(theName);
 				item.setPrice(price);
 				item.setQuantity(quantity);
-				//String imageURL = imageBaseURI + imageID;
 				String imageURL = getImageFromS3(imageID);
 				item.setImageURL(imageURL);
 				item.setImage(imageID);
