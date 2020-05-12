@@ -48,10 +48,6 @@ import com.example.demo.model.Item;
 @RestController
 public class ItemController {
 
-
-	@Autowired
-	private JdbcTemplate temp;
-
 	// MySQL credentials, got help from https://www.youtube.com/watch?v=_oEOH23OYYQ
 	// at 14:21
 	private String dburl = new String(
