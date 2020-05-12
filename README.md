@@ -65,9 +65,13 @@ To run the React frontend application:
 4. Run the command “npm start” which will begin the React application and automatically open a window in your browser.
 5. That’s it! Now you can use all of the webpage features of Simply Shop that interface through the Spring Boot backend.
 
-### Database Schema
+### Database Schemas
+
+##### AWS RDS
 
 ![AWS RDS Schema](Screenshots/RDS.png)
+
+##### AWS S3
 
 ![AWS S3 Schema](Screenshots/S3.png)
 
