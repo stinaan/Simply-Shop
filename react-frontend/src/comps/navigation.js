@@ -17,9 +17,9 @@ const Navcomp = () => {
           <li><NavLink to="/manage">Manage</NavLink></li>
           <li><NavLink to="/stylepage">Stylepage</NavLink></li>
         </ul>
-        <button id="login-button">
+        {/* <button id="login-button">
           <NavLink to="/login">Login as Admin</NavLink>
-        </button>
+        </button> */}
       </nav>
     );
 }
