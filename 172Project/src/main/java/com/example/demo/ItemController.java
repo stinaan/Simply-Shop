@@ -96,7 +96,7 @@ public class ItemController {
 
 //~~~~~~S3 FUNCTIONS~~~~~~//
 	AWSCredentials credentials = new BasicAWSCredentials("[This was previously an AWS key]",
-			"[This was previously an AWS session]");
+			"[This was previously an AWS key]");
 	AmazonS3 s3client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials))
 			.withRegion(Regions.US_WEST_1).build();
 	String bucketName = "cmpe172project";
