@@ -53,6 +53,8 @@ You’ll also need the most recent version of Node. This is to run the React fro
 
 To run the Spring Boot application:
 
+- You will need the database credentials and S3 credentials to run the project. If you were to receive the credentials, this is how you would run it.
+
 1. Open a command prompt/terminal within the “172Project” folder that contains the “pom.xml” file.
 2. Type in “mvn spring-boot:run” inside the command prompt/terminal
 3. Type in http://localhost:${port#}/
