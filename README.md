@@ -79,18 +79,23 @@ To run the React frontend application:
 
 ##### MySQL Queries
 //Add items
+
 String query = “insert into userdb.item (name, category, price, quantity, description, imageID) values (\"" + item.getName() + "\",\"" + item.getCategory() + "\",\"" + item.getPrice().toString() + "\",\"" + item.getQuantity().toString() + "\",\"" + item.getDescription() + "\",\"" + fileName + "\") ";
 
 //Edit items
+
 String query = "UPDATE userdb.item SET name = \""+item.getName()+"\", category = \""+item.getCategory()+"\", description = \""+item.getDescription()+"\", price = \""+item.getPrice().toString()+"\", quantity = \""+item.getQuantity().toString()+"\",imageID = \""+fileName+"\" WHERE id = "+itemID;
 
 //Select item by id
+
 String query = "select * from userdb.item where id = " + itemID + " ";
 
 //Select all items
+
 String query = "select * from userdb.item";
 
 //Delete item by id
+
 String query = "delete from userdb.item where id = " + itemID + " ";
 
 
