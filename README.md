@@ -68,6 +68,8 @@ If you were to receive the credentials, this is how you would run it.
 
 To run the React frontend application:
 
+- Before running, check package.json to make sure that the proxy is the same url as the link at which the SpringBoot application is running on. For example, if the Spring Boot application runs on http://localhost:8081/, then the proxy should be set to http://localhost:8081/
+
 1. Open a command prompt/terminal within the folder called “react-frontend.”
 2. Run the command “npm install” which will take some time to install all of the proper dependencies for the project according to the contents of the package.json file.
 3. Before moving onto the next step, make sure that the Spring Boot application is running without any errors.
