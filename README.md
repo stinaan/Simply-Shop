@@ -58,7 +58,7 @@ To run the Spring Boot application:
 
 For application.properties, the following variables need to be modified: spring.datasource.url
 
-For ItemController, the following variables need to be modified: dburl, dbuname, dbpassword, credentials, imageBaseURI, and the String in line 142 ("[this was previously an S3 link for a bucket]")
+For ItemController, the following variables need to be modified during initialization: dburl, dbuname, dbpassword, credentials, imageBaseURI, and the String in line 142 ("[this was previously an S3 link for a bucket]")
 
 If you were to receive the credentials, this is how you would run it.
 
