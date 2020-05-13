@@ -13,6 +13,7 @@ Created by Richard Pham, Adam Ball, and Christina Nguyen.
 - [Screenshots](https://github.com/richardphamsjsu2016/172project#screenshots)
 - [Prerequisites for Set-up](https://github.com/richardphamsjsu2016/172project#prerequisites-for-set-up)
 - [How to Run the Project](https://github.com/richardphamsjsu2016/172project#how-to-run-the-project)
+- [Class and Sequence Diagrams](https://github.com/richardphamsjsu2016/172project#class-and-sequence-diagrams)
 - [Database Schema and Example Queries](https://github.com/richardphamsjsu2016/172project#database-schema-and-example-queries)
 - [Spring Boot API Endpoints](https://github.com/richardphamsjsu2016/172project#spring-boot-api-endpoints)
 - [Frontend to Backend Data Transport](https://github.com/richardphamsjsu2016/172project#frontend-to-backend-data-transport)
@@ -66,6 +67,20 @@ To run the React frontend application:
 3. Before moving onto the next step, make sure that the Spring Boot application is running without any errors.
 4. Run the command “npm start” which will begin the React application and automatically open a window in your browser.
 5. That’s it! Now you can use all of the webpage features of Simply Shop that interface through the Spring Boot backend.
+
+### Class and Sequence Diagrams
+
+![Class Diagram](Diagrams/Class.png)
+
+![View All Items](Diagrams/View_All.png)
+
+![View Item](Diagrams/View_Item.png)
+
+![Edit Data](Diagrams/Edit_Data.png)
+
+![Create Item](Diagrams/Create_Item.png)
+
+![Delete Item](Diagrams/Delete_Item.png)
 
 ### Database Schemas
 
